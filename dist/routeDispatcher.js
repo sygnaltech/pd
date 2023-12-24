@@ -1,12 +1,4 @@
 (() => {
-  // src/page/clinic.ts
-  var ClinicPage = class {
-    constructor() {
-    }
-    init() {
-    }
-  };
-
   // src/routeDispatcher.ts
   var RouteDispatcher = class {
     constructor() {
@@ -34,22 +26,5 @@
       }
     }
   };
-
-  // src/index.ts
-  window["Site"] = window["Site"] || {};
-  var Rise = window["Site"];
-  var init = () => {
-    console.log("SITE package init v0.0.1");
-    var routeDispatcher = new RouteDispatcher();
-    routeDispatcher.routes = {
-      "/": () => {
-      },
-      "/clinics/*": () => {
-        new ClinicPage().init();
-      }
-    };
-    console.log("loaded");
-  };
-  document.addEventListener("DOMContentLoaded", init);
 })();
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=routeDispatcher.js.map
