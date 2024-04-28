@@ -1,8 +1,14 @@
 
 /*
  * SITE 
- * Page | Clinic 
+ * Page | Maternity Scan Calculator 
  * 
+ * - Calculate EDD, and call page
+ * - If EDD passed in as param, new mode
+ * - Calculate scan dates list 
+ *    - Show past
+ *    - Current ( and date to book before )
+ *    - Upcoming ( and earliest date to book )
  */
 
 // import { TocFix } from "../tocfix";
@@ -14,15 +20,53 @@
 //const url: string = 'https://www.sygnal.com?thisisatrackingurlthsfdsfsdsdatdoesstuff';
 
 
-export class ClinicPage {
+
+enum PageMode {
+    Calc,
+    Display
+}
+
+const PARAM_EDD = "edd";
+
+export class MaternityScanCalcPage {
+
+    _mode: PageMode = PageMode.Calc;
+    _edd: Date | null = null;
 
     constructor() {
     }
     
     init() {
 
+        // Create a URL object from the current location
+        const currentUrl = new URL(window.location.href);
+    
+        // Access the URL's search parameters
+        const searchParams = new URLSearchParams(currentUrl.search);
+
         /**
-         * Fix links for the ToC 
+         * Determine Page Mode
+         */
+
+        // If querystrying ?edd, mode is display
+        // else mode is calc 
+        this._mode = PageMode.Calc;
+        const eddValue = searchParams.get(PARAM_EDD);
+        if (eddValue) {
+            const parsedDate = new Date(eddValue);
+            if (!isNaN(parsedDate.getTime())) {
+                this._mode = PageMode.Display;
+                this._edd = parsedDate;
+            } else {
+                console.error('Invalid date format:', eddValue);
+            }
+        }
+
+        /**
+         * Hide/show areas
+         * Mode Display
+         *   - show display area
+         *   - calc display area 
          */
 
         // let tocFix = new TocFix();

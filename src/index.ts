@@ -4,12 +4,12 @@
  * 
  */
 
-import { ClinicPage } from "./page/clinic";
+import { MaternityScanCalcPage } from "./page/maternityScanCalc"; 
 import { RouteDispatcher } from "./routeDispatcher";
 
-// Global Rise object
+// Global Site object
 window['Site'] = window['Site'] || {}; 
-var Rise = window['Site'];
+var Site = window['Site'];
 
 const init = () => {
 
@@ -23,9 +23,9 @@ const init = () => {
             // No special code
 
         },
-        '/clinics/*': () => {
+        '/maternity': () => {
 
-            (new ClinicPage()).init();
+            (new MaternityScanCalcPage()).init();
 
         },
 
