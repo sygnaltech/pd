@@ -1,0 +1,89 @@
+/*
+	Custom CSS
+	Please make sure your CSS rules are 
+	more particular / have higher priority
+	then other page styles
+*/
+#events h3   {
+	/* add your css rule here */
+}
+
+
+ #events p.duration, #events div.duration   {
+	/* add your css rule here */
+}
+
+
+ #events p.description, #events div.description   {
+	/* add your css rule here */
+}
+
+
+ #events .selectedEvent   {
+	/* add your css rule here */
+}
+
+
+ #events input.reserve_time_btn   {
+	/* add your css rule here */
+}
+
+
+ #events input.select_another_btn   {
+	/* add your css rule here */
+}
+
+
+ #eventForm #start_date-block-container h3, #eventForm #timeline-container h3   {
+	/* add your css rule here */
+}
+
+
+ #eventForm #save_button   {
+	/* add your css rule here */
+}
+
+
+ div.ui-widget-content   {
+	/* add your css rule here */
+}
+
+
+ div.ui-widget-header   {
+	/* add your css rule here */
+}
+
+
+ #timeline-container table.timeline   {
+	/* add your css rule here */
+}
+
+
+ .timeline td.not_worked_time   {
+	/* add your css rule here */
+}
+
+
+ .timeline td.free_time   {
+	/* add your css rule here */
+}
+
+
+ .timeline td.selected_time   {
+	/* add your css rule here */
+}
+
+
+ .timeline td.reserved_time   {
+	/* add your css rule here */
+}
+
+
+ div#loading   {
+	/* add your css rule here */
+}
+
+
+ #start_date-block-container .zend_form dt, start_date-block-container .zend_form dt b, start_date-block-container .zend_form dd label   {
+	/* add your css rule here */
+}
