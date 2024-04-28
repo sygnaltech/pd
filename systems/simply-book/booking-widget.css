@@ -1,0 +1,257 @@
+
+/**
+* Payment page
+* Restyle defer option for Southern Cross
+*/
+
+.payment-modal .payment-system-container .payment-system-delay .img {
+    display: none !important;
+}
+
+.payment-modal .payment-system-container .payment-system-delay {
+    background-image: url('https://uploads-ssl.webflow.com/60f0b32c84789d2d1b5ddbb8/65a0dce591a641be33548dec_ez-claim-book.png') !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+.payment-modal .payment-system-container .payment-system-delay .name::before {
+    visibility: visible !important;
+}
+.payment-modal .payment-system-container .payment-system-delay .name {
+    visibility: hidden !important;
+}
+.payment-modal .payment-system-container .payment-system-delay .name::before {
+    content: 'Easy-Claim & POAC' !important;
+    display: block !important;
+}
+
+
+/* added by support team to suppress read-more
+removed by mike, since it's position dependent and blocks service descriptions in all categories (not just that one service) */
+
+/*
+#sb_service_step_container > div:nth-child(1) > div.one-line.no-image > div.btn-bar.has-read-more > div.wrap-read-more > a {
+display:none!important;
+}
+*/
+
+/* custom mods by SBM team here, LR ream mods below */
+
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel>.one-line {
+    flex-wrap: nowrap!important;
+}
+.is-widget #sb-timeline {
+    padding-bottom: 0;
+}
+#sb-timeline #steps-nav {
+    margin-bottom: 0!important;
+}
+
+.is-widget #sb-main-container {
+    padding-bottom: 0;
+    min-height: fit-content;
+}
+
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel {
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel .btn-bar {
+    flex-direction: row;
+    width: 100%;
+    margin: 5px;
+}
+
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel .title {
+    margin: 0;
+}
+
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel .btn-bar .btn:last-child {
+    margin-right: 0;
+    height: 20px!important;
+}
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel .info-bar .bar-flex-item:last-child {
+    margin: 0;
+}
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel {
+    margin-bottom: 5px;
+    padding: 5px 5px 0 5px;
+}
+
+#sb-timeline #steps #steps-content #sb_booking_content .item.panel>.one-line .content {
+    min-height: 0;
+}
+
+/* LR ream mods below - mike */
+
+#sb_booking_content {
+    margin-top: 60px;
+}
+
+#sb-timeline #steps #steps-content .step-content.content-mode-list {
+    padding: 0 15px 15px 15px;
+}
+
+#sb-timeline #steps #sb_back_button {
+    top: 22px;
+    margin-left: 25px;
+}
+
+#sb_close_widget_button {
+    top: 0px;
+}
+
+
+/*--------------------------------------------------------------------------------
+    Custom CSS
+    Please make sure your CSS rules are
+    more particular / have higher priority
+    then other page styles
+*/
+
+#sb_back_btns_plugin {
+    padding-top: 20px;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 17%);
+    border-radius: 3px;
+    background-color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 160px;
+}
+
+header#header {
+    display: none;
+}
+
+footer#footer {
+    display: none;
+}
+
+@media only screen and (min-width: 400px) {
+}
+
+#steps-nav {
+    margin-bottom: 0px;
+}
+
+.is-widget #sb-timeline {
+    padding-bottom: 90px;
+}
+
+
+
+#events h3   {
+    /* add your css rule here */
+}
+
+
+#events p.duration, #events div.duration   {
+    /* add your css rule here */
+}
+
+
+#events p.description, #events div.description   {
+    /* add your css rule here */
+}
+
+
+#events .selectedEvent   {
+    /* add your css rule here */
+}
+
+
+#events input.reserve_time_btn   {
+    /* add your css rule here */
+}
+
+
+#events input.select_another_btn   {
+    /* add your css rule here */
+}
+
+
+#eventForm #start_date-block-container h3, #eventForm #timeline-container h3   {
+    /* add your css rule here */
+}
+
+
+#eventForm #save_button   {
+    /* add your css rule here */
+}
+
+
+div.ui-widget-content   {
+    /* add your css rule here */
+}
+
+
+div.ui-widget-header   {
+    /* add your css rule here */
+}
+
+
+#timeline-container table.timeline   {
+    /* add your css rule here */
+}
+
+
+.timeline td.not_worked_time   {
+    /* add your css rule here */
+}
+
+
+.timeline td.free_time   {
+    /* add your css rule here */
+}
+
+
+.timeline td.selected_time   {
+    /* add your css rule here */
+}
+
+
+.timeline td.reserved_time   {
+    /* add your css rule here */
+}
+
+
+div#loading   {
+    /* add your css rule here */
+}
+
+
+div#widget_container   {
+    /* add your css rule here */
+}
+
+
+#widget_container #widget_header   {
+    /* add your css rule here */
+}
+
+
+#widget_container #widget_footer   {
+    /* add your css rule here */
+}
+
+
+#widget_container h1.title a   {
+    /* add your css rule here */
+}
+
+
+#events .event_price   {
+    /* add your css rule here */
+}
+
+
+#eventForm dd.extention_data   {
+    /* add your css rule here */
+}
+
+
+dd.extention_data dl.zend_form dt, dd.extention_data dl.zend_form dd label   {
+    /* add your css rule here */
+}
