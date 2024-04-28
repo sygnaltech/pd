@@ -1,9 +1,25 @@
 (() => {
-  // src/page/clinic.ts
-  var ClinicPage = class {
+  // src/page/maternityScanCalc.ts
+  var PARAM_EDD = "edd";
+  var MaternityScanCalcPage = class {
     constructor() {
+      this._mode = 0 /* Calc */;
+      this._edd = null;
     }
     init() {
+      const currentUrl = new URL(window.location.href);
+      const searchParams = new URLSearchParams(currentUrl.search);
+      this._mode = 0 /* Calc */;
+      const eddValue = searchParams.get(PARAM_EDD);
+      if (eddValue) {
+        const parsedDate = new Date(eddValue);
+        if (!isNaN(parsedDate.getTime())) {
+          this._mode = 1 /* Display */;
+          this._edd = parsedDate;
+        } else {
+          console.error("Invalid date format:", eddValue);
+        }
+      }
     }
   };
 
@@ -37,15 +53,15 @@
 
   // src/index.ts
   window["Site"] = window["Site"] || {};
-  var Rise = window["Site"];
+  var Site = window["Site"];
   var init = () => {
     console.log("SITE package init v0.0.1");
     var routeDispatcher = new RouteDispatcher();
     routeDispatcher.routes = {
       "/": () => {
       },
-      "/clinics/*": () => {
-        new ClinicPage().init();
+      "/maternity": () => {
+        new MaternityScanCalcPage().init();
       }
     };
     console.log("loaded");
