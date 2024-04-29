@@ -30,6 +30,7 @@ const init = () => {
         },
 
     };
+    routeDispatcher.dispatchRoute(); 
 
     console.log('loaded')
 }

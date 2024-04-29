@@ -10,21 +10,21 @@ export interface Routes {
     [path: string]: RouteHandler;
 }
 
-const routes: Routes = {
-    '/': () => {
-        console.log('This is the homepage.');
-        // Your function for the homepage
-    },
-    '/about': () => {
-        console.log('This is the about page.');
-        // Your function for the about page
-    },
-    '/contact': () => {
-        console.log('This is the contact page.');
-        // Your function for the contact page
-    },
-    // ... add more routes as needed
-};
+// const routes: Routes = {
+//     '/': () => {
+//         console.log('This is the homepage.');
+//         // Your function for the homepage
+//     },
+//     '/about': () => {
+//         console.log('This is the about page.');
+//         // Your function for the about page
+//     },
+//     '/contact': () => {
+//         console.log('This is the contact page.');
+//         // Your function for the contact page
+//     },
+//     // ... add more routes as needed
+// };
 
 export class RouteDispatcher {
 
