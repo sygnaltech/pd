@@ -7,7 +7,7 @@ declare function timelyButton(company: string, options: object): void;
 export class TimelyService {
 
   account: string;
-  defaultLocationId: string;
+  defaultLocationId: string; // 247844  
   defaultProviderId: string;
   defaultCategoryId: string;
   defaultServiceId: string;
@@ -37,7 +37,7 @@ export class TimelyService {
 
   static loadTimelyScript(): Promise<void> {
 
-// Check to see if it exists? install only if needed? 
+    // Check to see if it exists? install only if needed? 
 
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');

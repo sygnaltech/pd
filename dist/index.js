@@ -106,17 +106,46 @@
             console.error("Window.data is not available.");
             return;
           }
-          addEventListeners('*[timely="book"]', "click", function(e) {
-            const categoryId = this.getAttribute("categoryId");
-            const serviceId = this.getAttribute("serviceId");
-            const timely = new TimelyService("ponsonbydoctors");
-            timely.bookService(categoryId, serviceId);
+          addEventListeners('*[timely="book"]', "click", (e) => {
+            const target = e.currentTarget;
+            this.timely.bookService(
+              target.getAttribute("categoryId"),
+              target.getAttribute("serviceId")
+            );
+          });
+          addEventListeners('*[timely="ponsonby"]', "click", (e) => {
+            const target = e.currentTarget;
+            this.timely.bookService(
+              target.getAttribute("categoryId"),
+              target.getAttribute("serviceId")
+            );
+          });
+          addEventListeners('*[timely="ponsonby-service"]', "click", (e) => {
+            const target = e.currentTarget;
+            this.timely.bookService(
+              target.getAttribute("categoryId"),
+              target.getAttribute("serviceId")
+            );
+          });
+          addEventListeners('*[timely="online"]', "click", (e) => {
+            const target = e.currentTarget;
+            this.timely.bookService(
+              target.getAttribute("categoryId"),
+              target.getAttribute("serviceId")
+            );
+          });
+          addEventListeners('*[timely="online-service"]', "click", (e) => {
+            const target = e.currentTarget;
+            this.timely.bookService(
+              target.getAttribute("categoryId"),
+              target.getAttribute("serviceId")
+            );
           });
           if (window.location.search.includes("action=book")) {
-            const categoryId = window.data.timely_categoryId;
-            const serviceId = window.data.timely_productId;
-            const timely = new TimelyService("ponsonbydoctors");
-            timely.bookService(categoryId, serviceId);
+            this.timely.bookService(
+              window.data.timely_categoryId,
+              window.data.timely_productId
+            );
           }
         }
       };
