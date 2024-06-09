@@ -56,17 +56,22 @@
           });
         }
         bookService(categoryId, serviceId) {
-          const bookingButton = new timelyButton("ponsonbydoctors", {
-            category: categoryId,
-            service: serviceId,
-            dontCreateButton: true
-          });
+          const bookingButton = new timelyButton(
+            this.account,
+            {
+              location: this.defaultLocationId,
+              staff: this.defaultStaffId,
+              category: categoryId,
+              product: serviceId,
+              dontCreateButton: true
+            }
+          );
           bookingButton.start();
         }
         static loadTimelyScript() {
           return new Promise((resolve, reject) => {
             const script = document.createElement("script");
-            script.src = "//book.gettimely.com/widget/book-button-v1.3.js";
+            script.src = "//book.gettimely.com/widget/book-button-v1.5.js";
             script.id = "timelyScript";
             script.onload = () => resolve();
             script.onerror = () => reject(new Error(`Failed to load script: ${script.src}`));

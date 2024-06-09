@@ -1,0 +1,10 @@
+.w-richtext[wfu-lists] li {
+  animation: none;
+}
+
+*[wfu-theme2=stacked] ol .wfu-list-level-2 {
+  list-style-type: lower-latin;
+}
+*[wfu-theme2=stacked] ol .wfu-list-level-3 {
+  list-style-type: lower-roman;
+}/*# sourceMappingURL=site.css.map */
