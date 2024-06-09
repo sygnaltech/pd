@@ -27,6 +27,10 @@ const SITE_NAME = 'Site';
 // }
 
 
+// https://codepen.io/memetican/pen/eYrrvxW/e3b373367dec74d2d3f33418c88ac7b3
+// https://codepen.io/memetican/pen/mdvvQjr/d8977b7cbf76dd4344b36b2136205086 
+
+
 const init = async() => {
     
     console.log(`%c${SITE_NAME} package init ${VERSION}`, "color: blue;");
