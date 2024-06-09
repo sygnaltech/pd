@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/timely.ts"],
+  "sourcesContent": ["\n\n\nexport function loadTimelyScript(src: string): Promise<void> {\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = src;\n      script.id = 'timelyScript';\n      script.onload = () => resolve();\n      script.onerror = () => reject(new Error(`Failed to load script: ${src}`));\n      document.head.appendChild(script);\n    });\n  }\n  "],
+  "mappings": ";;;AAGO,WAAS,iBAAiB,KAA4B;AACzD,WAAO,IAAI,QAAQ,CAAC,SAAS,WAAW;AACtC,YAAM,SAAS,SAAS,cAAc,QAAQ;AAC9C,aAAO,MAAM;AACb,aAAO,KAAK;AACZ,aAAO,SAAS,MAAM,QAAQ;AAC9B,aAAO,UAAU,MAAM,OAAO,IAAI,MAAM,0BAA0B,KAAK,CAAC;AACxE,eAAS,KAAK,YAAY,MAAM;AAAA,IAClC,CAAC;AAAA,EACH;",
+  "names": []
+}

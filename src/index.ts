@@ -5,22 +5,45 @@
  */
 
 import { ClinicPage } from "./page/clinic";
+import { ServicesPage } from "./page/services";
 import { RouteDispatcher } from "./routeDispatcher";
+import { Site } from "./site";
+import { VERSION } from "./version";
 
-// Global Rise object
-window['Site'] = window['Site'] || {}; 
-var Rise = window['Site'];
+// Global vars
+const SITE_NAME = 'Site';
+//const VERSION = 'v0.1.8';
+
+// Global Site object
+// window['Site'] = window['Site'] || {}; 
+// var Site = window['Site'];
+
+
+declare global {
+    interface Window {
+        data: WindowData;
+    }
+}
+
 
 const init = () => {
+    
+    console.log(`%c${SITE_NAME} package init ${VERSION}`, "color: blue;");
+    // console.log("%c📶 Signal Site Engine: Initialization complete", "color: blue; background: url('https://assets.sygnal.com/https://cdn.prod.website-files.com/59b8d49f7fdf9700017d780f/59b8d57a646143000180fcca_sygnal-logo-small.png') no-repeat left center; padding-left: 20px;");
+    // console.log("%c📶 Signal Site Engine: Initialization complete", "color: blue; background: url('https://assets.sygnal.com/https://cdn.prod.website-files.com/59b8d49f7fdf9700017d780f/59b8d57a646143000180fcca_sygnal-logo-small.png') no-repeat left center; padding-left: 20px;");
 
-    console.log("SITE package init v0.0.1");
-
+    (new Site().init()); 
     
     var routeDispatcher = new RouteDispatcher();
     routeDispatcher.routes = {
         '/': () => {
 
             // No special code
+
+        },
+        '/services/*': () => {
+
+            (new ServicesPage()).init();
 
         },
         '/clinics/*': () => {
@@ -30,8 +53,8 @@ const init = () => {
         },
 
     };
+    routeDispatcher.dispatchRoute(); 
 
-    console.log('loaded')
 }
 
 document.addEventListener("DOMContentLoaded", init)

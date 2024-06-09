@@ -1,0 +1,27 @@
+
+// https://codepen.io/memetican/pen/eYrrvxW/e3b373367dec74d2d3f33418c88ac7b3
+
+body {
+    //  background-color: red;
+    }
+    
+    // TEMP override loader
+    .w-richtext[wfu-lists] li {
+    
+        animation: none;
+    }
+    
+    // can remove, default now has this styling 
+    *[wfu-theme2="stacked"] {
+      
+      ol .wfu-list-level-2 {
+        list-style-type: lower-latin;
+      }
+    
+      ol .wfu-list-level-3 {
+          list-style-type: lower-roman;
+      }
+    
+    }
+    
+    // leading char css control 
