@@ -1,5 +1,5 @@
 // global.d.ts
-interface WindowData {
+export interface WindowData {
     timely_categoryId: string;
     timely_productId: string;
     sbm_categoryId: string;
@@ -8,7 +8,7 @@ interface WindowData {
   // Extend the Window interface to include the data property
 // declare global {
 
-  interface Window {
+  export interface Window {
     data: WindowData;
   }
 //}

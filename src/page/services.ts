@@ -5,6 +5,8 @@
  * 
  */
 
+import { WindowData } from "../../types/global";
+
 // import { TocFix } from "../tocfix";
 // import Plyr from 'plyr';
 // // import QRCode from 'qrcode';
@@ -32,6 +34,11 @@
 //     }
 // }
 
+declare global {
+    interface Window {
+        data: WindowData;
+    }
+}
 
 export class ServicesPage {
 
