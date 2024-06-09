@@ -1,18 +1,43 @@
 
 
+
+declare function timelyButton(company: string, options: object): void;
+
+
 export class TimelyService {
 
-  constructor() {
+  account: string;
+  defaultLocationId: string;
+  defaultProviderId: string;
+  defaultCategoryId: string;
+  defaultServiceId: string;
+
+  constructor(account: string) {
+
+    this.account = account; 
+
   }
   
   async init() {
 
-    console.log("adding timely script")
-    await this.loadTimelyScript(); 
+    // console.log("adding timely script")
+    // await this.loadTimelyScript(); 
 
   }
 
-  private loadTimelyScript(): Promise<void> {
+  bookService(categoryId: string | null, serviceId: string | null) {
+    const bookingButton = new timelyButton('ponsonbydoctors', {
+      category: categoryId,
+        service: serviceId,
+      dontCreateButton: true
+  });
+
+  bookingButton.start();
+  }
+
+  static loadTimelyScript(): Promise<void> {
+
+// Check to see if it exists? install only if needed? 
 
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');

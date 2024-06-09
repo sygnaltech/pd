@@ -42,69 +42,82 @@
     }
   });
 
+  // src/services/booking/timely.ts
+  var TimelyService;
+  var init_timely = __esm({
+    "src/services/booking/timely.ts"() {
+      "use strict";
+      TimelyService = class {
+        constructor(account) {
+          this.account = account;
+        }
+        init() {
+          return __async(this, null, function* () {
+          });
+        }
+        bookService(categoryId, serviceId) {
+          const bookingButton = new timelyButton("ponsonbydoctors", {
+            category: categoryId,
+            service: serviceId,
+            dontCreateButton: true
+          });
+          bookingButton.start();
+        }
+        static loadTimelyScript() {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "//book.gettimely.com/widget/book-button-v1.3.js";
+            script.id = "timelyScript";
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`Failed to load script: ${script.src}`));
+            document.head.appendChild(script);
+          });
+        }
+      };
+    }
+  });
+
+  // src/util.ts
+  function addEventListeners(selector, event, handler) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach((element) => {
+      element.addEventListener(event, handler);
+    });
+  }
+  var init_util = __esm({
+    "src/util.ts"() {
+      "use strict";
+    }
+  });
+
   // src/page/services.ts
   var ServicesPage;
   var init_services = __esm({
     "src/page/services.ts"() {
       "use strict";
+      init_timely();
+      init_util();
       ServicesPage = class {
         constructor() {
+          this.timely = new TimelyService("ponsonbydoctors");
         }
         init() {
           if (!window.data) {
             console.error("Window.data is not available.");
             return;
           }
-          console.log("setting up buttons");
-          var bookingButtonInClinic = new timelyButton("ponsonbydoctors", {
-            "category": window.data.timely_categoryId,
-            "dontCreateButton": true
-          });
-          var bookingButtonInClinicService = new timelyButton("ponsonbydoctors", {
-            "category": window.data.timely_categoryId,
-            "product": window.data.timely_productId,
-            "dontCreateButton": true
-          });
-          var bookingButtonOnline = new timelyButton("ponsonbydoctors", {
-            "category": "",
-            "dontCreateButton": true
-          });
-          var bookingButtonOnlineService = new timelyButton("ponsonbydoctors", {
-            "category": "",
-            "product": "",
-            "dontCreateButton": true
-          });
-          this.addEventListeners('*[timely="book"]', "click", function(e) {
+          addEventListeners('*[timely="book"]', "click", function(e) {
             const categoryId = this.getAttribute("categoryId");
             const serviceId = this.getAttribute("serviceId");
-            const bookingButton = new timelyButton("ponsonbydoctors", {
-              category: categoryId,
-              service: serviceId,
-              dontCreateButton: true
-            });
-            bookingButton.start();
-          });
-          this.addEventListeners('*[timely="ponsonby"]', "click", function() {
-            bookingButtonInClinic.start();
-          });
-          this.addEventListeners('*[timely="ponsonby-service"]', "click", function() {
-            bookingButtonInClinicService.start();
-          });
-          this.addEventListeners('*[timely="online"]', "click", function() {
-            bookingButtonOnline.start();
-          });
-          this.addEventListeners('*[timely="online-service"]', "click", function() {
-            bookingButtonOnlineService.start();
+            const timely = new TimelyService("ponsonbydoctors");
+            timely.bookService(categoryId, serviceId);
           });
           if (window.location.search.includes("action=book")) {
-            bookingButtonInClinic.start();
+            const categoryId = window.data.timely_categoryId;
+            const serviceId = window.data.timely_productId;
+            const timely = new TimelyService("ponsonbydoctors");
+            timely.bookService(categoryId, serviceId);
           }
-        }
-        addEventListeners(selector, event, handler) {
-          const elements = document.querySelectorAll(selector);
-          elements.forEach((element) => {
-            element.addEventListener(event, handler);
-          });
         }
       };
     }
@@ -139,34 +152,6 @@
           } else {
             console.log("No specific function for this path.");
           }
-        }
-      };
-    }
-  });
-
-  // src/services/booking/timely.ts
-  var TimelyService;
-  var init_timely = __esm({
-    "src/services/booking/timely.ts"() {
-      "use strict";
-      TimelyService = class {
-        constructor() {
-        }
-        init() {
-          return __async(this, null, function* () {
-            console.log("adding timely script");
-            yield this.loadTimelyScript();
-          });
-        }
-        loadTimelyScript() {
-          return new Promise((resolve, reject) => {
-            const script = document.createElement("script");
-            script.src = "//book.gettimely.com/widget/book-button-v1.3.js";
-            script.id = "timelyScript";
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error(`Failed to load script: ${script.src}`));
-            document.head.appendChild(script);
-          });
         }
       };
     }
@@ -218,7 +203,7 @@
       var init = () => __async(exports, null, function* () {
         console.log(`%c${SITE_NAME} package init ${VERSION}`, "color: blue;");
         new Site().init();
-        yield new TimelyService().init();
+        yield TimelyService.loadTimelyScript();
         var routeDispatcher = new RouteDispatcher();
         routeDispatcher.routes = {
           "/": () => {

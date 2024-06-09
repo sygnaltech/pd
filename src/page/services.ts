@@ -5,7 +5,9 @@
  * 
  */
 
-import { WindowData } from "../../types/global";
+import { WindowData, Window } from "../../types/global";
+import { TimelyService } from "../services/booking/timely";
+import { addEventListeners } from "../util";
 
 // import { TocFix } from "../tocfix";
 // import Plyr from 'plyr';
@@ -26,7 +28,7 @@ import { WindowData } from "../../types/global";
 //     data: WindowData;
 //   }
 
-  declare function timelyButton(company: string, options: object): void;
+//  declare function timelyButton(company: string, options: object): void;
 
 //   declare global {
 //     interface Window {
@@ -42,7 +44,12 @@ declare global {
 
 export class ServicesPage {
 
+    timely: TimelyService;
+
     constructor() {
+
+        this.timely = new TimelyService("ponsonbydoctors"); 
+
     }
     
     init() {
@@ -54,74 +61,94 @@ export class ServicesPage {
             return;
         }
 
-console.log("setting up buttons")
+// // Timely
+// var bookingButtonInClinic = new timelyButton('ponsonbydoctors', {
+//     // "location": "247844", 
+//     "category": window.data.timely_categoryId,
+//     "dontCreateButton": true
+//   });  
 
-// Timely
-var bookingButtonInClinic = new timelyButton('ponsonbydoctors', {
-    // "location": "247844", 
-    "category": window.data.timely_categoryId,
-    "dontCreateButton": true
-  });  
+//   var bookingButtonInClinicService = new timelyButton('ponsonbydoctors', {
+//     // "location": "247844", 
+//     "category": window.data.timely_categoryId,
+//     "product": window.data.timely_productId,
+//     "dontCreateButton": true
+//   });  
 
-  var bookingButtonInClinicService = new timelyButton('ponsonbydoctors', {
-    // "location": "247844", 
-    "category": window.data.timely_categoryId,
-    "product": window.data.timely_productId,
-    "dontCreateButton": true
-  });  
+//   var bookingButtonOnline = new timelyButton('ponsonbydoctors', {
+//     // "location": "247844", 
+//     "category": "", // TimelyCategoryIDOnline
+//     "dontCreateButton": true
+//   });         
 
-  var bookingButtonOnline = new timelyButton('ponsonbydoctors', {
-    // "location": "247844", 
-    "category": "", // TimelyCategoryIDOnline
-    "dontCreateButton": true
-  });         
-
-  var bookingButtonOnlineService = new timelyButton('ponsonbydoctors', {
-    // "location": "247844", 
-    "category": "", // TimelyCategoryIDOnline
-    "product": "", // TimelyServiceIDOnline
-    "dontCreateButton": true
-  });      
+//   var bookingButtonOnlineService = new timelyButton('ponsonbydoctors', {
+//     // "location": "247844", 
+//     "category": "", // TimelyCategoryIDOnline
+//     "product": "", // TimelyServiceIDOnline
+//     "dontCreateButton": true
+//   });      
                  
   
 
 // Add click event listener to elements with attribute [timely="book"]
-this.addEventListeners('*[timely="book"]', 'click', function (this: HTMLElement, e: Event) {
-    const categoryId = this.getAttribute('categoryId');
-    const serviceId = this.getAttribute('serviceId');
+addEventListeners('*[timely="book"]', 'click', function (this: HTMLElement, e: Event) {
+    const categoryId: string | null = this.getAttribute('categoryId');
+    const serviceId: string | null = this.getAttribute('serviceId');
     
-    const bookingButton = new timelyButton('ponsonbydoctors', {
-      category: categoryId,
-      service: serviceId,
-      dontCreateButton: true
-    });
+    const timely: TimelyService = new TimelyService("ponsonbydoctors"); 
+
+timely.bookService(categoryId, serviceId); 
+
+//     const bookingButton = new timelyButton('ponsonbydoctors', {
+//       category: categoryId,
+//       service: serviceId,
+//       dontCreateButton: true
+//     });
   
-    bookingButton.start();
+// //    this.timely
+
+//     bookingButton.start();
   });
   
-  // Add click event listener to elements with attribute [timely="ponsonby"]
-  this.addEventListeners('*[timely="ponsonby"]', 'click', function () {
-    bookingButtonInClinic.start();
-  });
+//   // Add click event listener to elements with attribute [timely="ponsonby"]
+//   addEventListeners('*[timely="ponsonby"]', 'click', function () {
+//     bookingButtonInClinic.start();
+//   });
   
-  // Add click event listener to elements with attribute [timely="ponsonby-service"]
-  this.addEventListeners('*[timely="ponsonby-service"]', 'click', function () {
-    bookingButtonInClinicService.start();
-  });
+//   // Add click event listener to elements with attribute [timely="ponsonby-service"]
+//   addEventListeners('*[timely="ponsonby-service"]', 'click', function () {
+//     bookingButtonInClinicService.start();
+//   });
   
-  // Add click event listener to elements with attribute [timely="online"]
-  this.addEventListeners('*[timely="online"]', 'click', function () {
-    bookingButtonOnline.start();
-  });
+//   // Add click event listener to elements with attribute [timely="online"]
+//   addEventListeners('*[timely="online"]', 'click', function () {
+//     bookingButtonOnline.start();
+//   });
   
-  // Add click event listener to elements with attribute [timely="online-service"]
-  this.addEventListeners('*[timely="online-service"]', 'click', function () {
-    bookingButtonOnlineService.start();
-  });
+//   // Add click event listener to elements with attribute [timely="online-service"]
+//   addEventListeners('*[timely="online-service"]', 'click', function () {
+//     bookingButtonOnlineService.start();
+//   });
   
   // Auto-booking based on URL parameter
   if (window.location.search.includes('action=book')) {
-    bookingButtonInClinic.start();
+//    bookingButtonInClinic.start();
+
+    const categoryId = window.data.timely_categoryId;
+    const serviceId = window.data.timely_productId;
+
+    const timely: TimelyService = new TimelyService("ponsonbydoctors"); 
+
+timely.bookService(categoryId, serviceId); 
+
+//     const bookingButton = new timelyButton('ponsonbydoctors', {
+//         category: categoryId,
+// //        service: serviceId,
+//         dontCreateButton: true
+//     });
+
+//     bookingButton.start();
+
   }
 
 
@@ -129,13 +156,6 @@ this.addEventListeners('*[timely="book"]', 'click', function (this: HTMLElement,
 
     }
 
-// Utility function to add event listeners to elements
- addEventListeners(selector: string, event: string, handler: (e: Event) => void) {
-  const elements = document.querySelectorAll(selector);
-  elements.forEach(element => {
-    element.addEventListener(event, handler);
-  });
-}
 }  
 
     

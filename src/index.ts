@@ -35,7 +35,7 @@ const init = async() => {
 
     (new Site()).init(); 
     
-    await (new TimelyService()).init();
+    await TimelyService.loadTimelyScript();
 
     var routeDispatcher = new RouteDispatcher();
     routeDispatcher.routes = {

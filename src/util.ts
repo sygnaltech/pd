@@ -1,5 +1,14 @@
 
 
+// Utility function to add event listeners to elements
+export function addEventListeners(selector: string, event: string, handler: (e: Event) => void) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+      element.addEventListener(event, handler);
+    });
+  }
+
+  
 // Utility Functions
 export function formatAsNumber(n: number | string): string {
     if (Number(n) === 0) return "-";

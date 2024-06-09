@@ -1,6 +1,12 @@
 "use strict";
 (() => {
   // src/util.ts
+  function addEventListeners(selector, event, handler) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach((element) => {
+      element.addEventListener(event, handler);
+    });
+  }
   function formatAsNumber(n) {
     if (Number(n) === 0)
       return "-";
