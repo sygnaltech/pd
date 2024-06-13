@@ -3,14 +3,20 @@
  * Site
  */
 
+import { IModule } from "./IModule";
+
 // import gsap from 'gsap'; 
  
 
-export class Site {
+export class Site implements IModule {
 
   constructor() {
   }
-  
+
+  preInit() {
+        
+  }
+
   init() {
 
     console.log("Site."); 

@@ -27,6 +27,7 @@
 import flatpickr from "flatpickr";
 import { calculateEDDfromLMP } from "../../util";
 import { Instance } from "flatpickr/dist/types/instance";
+import { IModule } from "../IModule";
 
 
 enum PageMode {
@@ -38,7 +39,7 @@ const QUERY_PARAM_EDD = "edd";
 const ID_CALC_TIMELINE = "calc";
 const ID_CALC_EDD = "calc-edd"; 
 
-export class MaternityScanCalcPage {
+export class MaternityScanCalcPage implements IModule {
 
     _mode: PageMode = PageMode.Calc;
     _edd: Date | null = null;
@@ -48,9 +49,15 @@ export class MaternityScanCalcPage {
     _fpEDD: flatpickr.Instance; // Assuming you're using the flatpickr instance type
     _fpLMP: flatpickr.Instance; // Assuming you're using the flatpickr instance type
 
-    constructor() {
+    constructor() { 
     }
     
+    preInit() {
+
+//       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    }
+
     init() {
 
         // Create a URL object from the current location
