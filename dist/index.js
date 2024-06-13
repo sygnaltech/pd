@@ -2357,19 +2357,32 @@
     init() {
       const currentUrl = new URL(window.location.href);
       const searchParams = new URLSearchParams(currentUrl.search);
+      this._fpEDD = esm_default("#edd", {
+        mode: "single",
+        dateFormat: "Y-m-d"
+      });
+      this._fpLMP = esm_default("#lmp", {
+        mode: "single",
+        dateFormat: "Y-m-d"
+      });
       this._mode = 0 /* Calc */;
+      const timelineElement = document.getElementById("timeline");
+      if (timelineElement) {
+        timelineElement.style.display = "none";
+      } else {
+        console.error("Element with ID 'timeline' not found.");
+      }
       const eddValue = searchParams.get(QUERY_PARAM_EDD);
       if (eddValue) {
         const parsedDate = new Date(eddValue);
         if (!isNaN(parsedDate.getTime())) {
           this._mode = 1 /* Display */;
           this._edd = parsedDate;
+          this._fpEDD.setDate(parsedDate, true);
         } else {
           console.error("Invalid date format:", eddValue);
         }
       }
-      this._fpEDD = esm_default("#edd", {});
-      this._fpLMP = esm_default("#lmp", {});
       const button = document.getElementById("calc-edd");
       button?.addEventListener("click", () => {
         const lmpInput = document.getElementById("lmp");
@@ -2379,9 +2392,83 @@
           console.log("calc button clicked", edd);
           const eddDate = new Date(edd);
           const formattedDate = eddDate.toISOString().split("T")[0];
-          console.log(this._fpEDD);
-          console.log(this._fpEDD);
-          window.location.href = `${window.location.pathname}?Edd=${formattedDate}`;
+          window.location.href = `${window.location.pathname}?edd=${formattedDate}`;
+        }
+      });
+      const buttonCalc = document.getElementById("calc");
+      buttonCalc?.addEventListener("click", () => {
+        const selectedDate = this._fpEDD.selectedDates[0];
+        if (selectedDate) {
+          const year = selectedDate.getFullYear();
+          const month = (selectedDate.getMonth() + 1).toString().padStart(2, "0");
+          const day = selectedDate.getDate().toString().padStart(2, "0");
+          const formattedDate = `${year}-${month}-${day}`;
+          window.location.href = `${window.location.pathname}?edd=${formattedDate}`;
+        } else {
+          console.error("No date selected.");
+        }
+      });
+      if (this._mode != 1 /* Display */)
+        return;
+      if (!this._edd) {
+        console.error("No EDD set.");
+        return;
+      }
+      const lmp = this._edd;
+      lmp.setDate(lmp.getDate() - 280);
+      const today = new Date();
+      const diffTime = Math.abs(today.getTime() - lmp.getTime());
+      const diffDays = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
+      const weeks = Math.floor(diffDays / 7);
+      const days = diffDays % 7;
+      const readableDate = this._edd.toLocaleDateString("en-NZ", {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+      var data = {
+        edd: readableDate,
+        progress: `${weeks} weeks and ${days} days`
+      };
+      this.updateDisplayValues(data);
+      const maternityWeek = weeks + 1;
+      this.updateVisibilityBasedOnWeek(maternityWeek);
+      timelineElement.style.display = "block";
+    }
+    updateVisibilityBasedOnWeek(maternityWeek) {
+      const elements = document.querySelectorAll("[min-week], [max-week]");
+      elements.forEach((element) => {
+        const minWeek = element.getAttribute("min-week");
+        const maxWeek = element.getAttribute("max-week");
+        const displayRule = element.getAttribute("display-rule") || "current";
+        let hide = false;
+        switch (displayRule) {
+          case "current":
+            if (minWeek && maternityWeek < parseInt(minWeek) || maxWeek && maternityWeek > parseInt(maxWeek)) {
+              hide = true;
+            }
+            break;
+          case "future":
+            if (minWeek && maternityWeek >= parseInt(minWeek)) {
+              hide = true;
+            }
+            break;
+          case "past":
+            if (maxWeek && maternityWeek <= parseInt(maxWeek)) {
+              hide = true;
+            }
+            break;
+        }
+        element.style.display = hide ? "none" : "";
+      });
+    }
+    updateDisplayValues(data) {
+      const elements = document.querySelectorAll("[display-value]");
+      elements.forEach((element) => {
+        const displayValue = element.getAttribute("display-value");
+        if (displayValue && data[displayValue] !== void 0) {
+          element.innerText = data[displayValue];
         }
       });
     }
