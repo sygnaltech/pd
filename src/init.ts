@@ -8,6 +8,13 @@ import Cookies from 'js-cookie';
 import { getCurrentScriptUrl, getQueryParam, loadScript, prependToTitle, replaceCSSLink } from './util';
 
 
+// Bring in script lib loading tools 
+// Do any initialization needed 
+// Load SSE up front
+// But run in two passes ->
+// Router to page init
+// Then after page loads, router to page exec  
+// <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 function initEngine() {
 
