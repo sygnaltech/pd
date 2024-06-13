@@ -1,6 +1,6 @@
 /*
- * RISE
- * Main entry point
+ * Sygnal
+ * Route Dispatcher
  * 
  */
 
@@ -10,21 +10,18 @@ export interface Routes {
     [path: string]: RouteHandler;
 }
 
-// const routes: Routes = {
-//     '/': () => {
-//         console.log('This is the homepage.');
-//         // Your function for the homepage
-//     },
-//     '/about': () => {
-//         console.log('This is the about page.');
-//         // Your function for the about page
-//     },
-//     '/contact': () => {
-//         console.log('This is the contact page.');
-//         // Your function for the contact page
-//     },
-//     // ... add more routes as needed
-// };
+// Example routes
+const routes: Routes = {
+    '/': () => {
+        console.log('This is the homepage.');
+    },
+    '/about': () => {
+        console.log('This is the about page.');
+    },
+    '/contact/*': () => {
+        console.log('This is the contact page.');
+    },
+};
 
 export class RouteDispatcher {
 
@@ -56,10 +53,9 @@ export class RouteDispatcher {
         if (handler) {
             handler();
         } else {
-            console.log('No specific function for this path.');
+//            console.log('No specific function for this path.');
             // Default function or behavior for unspecified paths
         }
     }
-    
     
 }

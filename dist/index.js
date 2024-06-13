@@ -2387,6 +2387,15 @@
     }
   };
 
+  // src/page/home.ts
+  var HomePage = class {
+    constructor() {
+    }
+    init() {
+      console.log("Home.");
+    }
+  };
+
   // src/routeDispatcher.ts
   var RouteDispatcher = class {
     constructor() {
@@ -2410,27 +2419,44 @@
       if (handler) {
         handler();
       } else {
-        console.log("No specific function for this path.");
       }
     }
   };
 
+  // src/site.ts
+  var Site = class {
+    constructor() {
+    }
+    init() {
+      console.log("Site.");
+    }
+  };
+
+  // src/version.ts
+  var VERSION = "0.1.0";
+
   // src/index.ts
-  window["Site"] = window["Site"] || {};
-  var Site = window["Site"];
+  var SITE_NAME = "Site";
+  window[SITE_NAME] = window[SITE_NAME] || {};
+  var SiteData = window[SITE_NAME];
   var init = () => {
-    console.log("SITE package init v0.0.1");
+    console.log(`${SITE_NAME} package init v${VERSION}`);
+    new Site().init();
     var routeDispatcher = new RouteDispatcher();
     routeDispatcher.routes = {
       "/": () => {
+        new HomePage().init();
       },
       "/maternity": () => {
         new MaternityScanCalcPage().init();
       }
     };
     routeDispatcher.dispatchRoute();
-    console.log("loaded");
   };
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") {
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
 })();
 //# sourceMappingURL=index.js.map
