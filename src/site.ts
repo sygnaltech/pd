@@ -3,21 +3,21 @@
  * Site
  */
 
-import { IModule } from "./IModule";
+import { IRouteHandler } from "./IRouteHandler";
 
 // import gsap from 'gsap'; 
  
 
-export class Site implements IModule {
+export class Site implements IRouteHandler {
 
   constructor() {
   }
 
-  preInit() {
+  setup() {
         
   }
 
-  init() {
+  exec() {
 
     console.log("Site."); 
 

@@ -27,7 +27,8 @@
 import flatpickr from "flatpickr";
 import { calculateEDDfromLMP } from "../../util";
 import { Instance } from "flatpickr/dist/types/instance";
-import { IModule } from "../IModule";
+import { IRouteHandler } from "../IRouteHandler";
+import { loadCSS, loadStyle } from "../util";
 
 
 enum PageMode {
@@ -39,7 +40,7 @@ const QUERY_PARAM_EDD = "edd";
 const ID_CALC_TIMELINE = "calc";
 const ID_CALC_EDD = "calc-edd"; 
 
-export class MaternityScanCalcPage implements IModule {
+export class MaternityScanCalcPage implements IRouteHandler {
 
     _mode: PageMode = PageMode.Calc;
     _edd: Date | null = null;
@@ -52,13 +53,19 @@ export class MaternityScanCalcPage implements IModule {
     constructor() { 
     }
     
-    preInit() {
+    setup() {
 
-//       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        loadStyle(`
+            .simplybook-widget-button {
+                display: none !important;
+            }
+            `);
+
+        loadCSS("https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"); 
 
     }
 
-    init() {
+    exec() {
 
         // Create a URL object from the current location
         const currentUrl = new URL(window.location.href);
@@ -169,7 +176,7 @@ export class MaternityScanCalcPage implements IModule {
          */
 
         // Calculate the start date (LMP)
-        const lmp = this._edd as Date; // new Date(this._edd);
+        const lmp = new Date(this._edd.getTime()); // Copy EDD 
         lmp.setDate(lmp.getDate() - 280); // 280 days before EDD
 
         // Calculate the difference between the LMP and today
@@ -199,6 +206,12 @@ this.updateDisplayValues(data);
 
 const maternityWeek = weeks + 1; 
 
+        /**
+         * Calc service week-dates
+         */
+
+        this.calculateAndDisplayTimelineWeekDates(lmp); 
+
 
         /**
          * Trimester
@@ -220,6 +233,61 @@ this.updateVisibilityBasedOnWeek(maternityWeek);
         timelineElement!.style.display = "block";  
                     
     }
+    private formatDateWithDifference(date: Date): string {
+        const today = new Date();
+        const diffTime = date.getTime() - today.getTime();
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    
+        let diffText: string;
+    
+        if (diffDays === 0) {
+          diffText = "(today)";
+        } else if (diffDays === 1) {
+          diffText = "(tomorrow)";
+        } else if (diffDays === -1) {
+          diffText = "(yesterday)";
+        } else if (diffDays > 1) {
+          diffText = `(in ${diffDays} days)`;
+        } else {
+          diffText = `(${Math.abs(diffDays)} days ago)`;
+        }
+    
+        return `${date.toDateString()} ${diffText}`;
+    }
+
+    calculateAndDisplayTimelineWeekDates(lmp: Date) {
+
+        // Calc and display week start dates 
+        const startDateElements = document.querySelectorAll('[week-startdate]');
+
+        startDateElements.forEach(element => {
+          const weekStr = element.getAttribute('week-startdate');
+          if (weekStr) {
+            const week = parseInt(weekStr) - 1;
+            if (!isNaN(week)) {
+              const calculatedDate = new Date(lmp);
+              calculatedDate.setDate(calculatedDate.getDate() + (week * 7));
+              (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
+            }
+          }
+        });
+
+        // Calc and display week end dates 
+        const endDateElements = document.querySelectorAll('[week-enddate]');
+
+        endDateElements.forEach(element => {
+          const weekStr = element.getAttribute('week-enddate');
+          if (weekStr) {
+            const week = parseInt(weekStr) - 1;
+            if (!isNaN(week)) {
+              const calculatedDate = new Date(lmp);
+              calculatedDate.setDate(calculatedDate.getDate() + (week * 7) + 6); // Add 6 days for end of week
+              (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
+            }
+          }
+        });
+
+      }
 
     updateVisibilityBasedOnWeek(maternityWeek: number) {
         const elements = document.querySelectorAll('[min-week], [max-week]');

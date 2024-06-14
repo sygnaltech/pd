@@ -3,7 +3,9 @@
   var Site = class {
     constructor() {
     }
-    init() {
+    setup() {
+    }
+    exec() {
       console.log("Site.");
     }
   };

@@ -4,24 +4,37 @@
  * 
  */
 
+import { IRouteHandler } from "./IRouteHandler";
+import { Site } from "./site";
+
 type RouteHandler = () => void;
+type RouteHandlerClass = { new (): IRouteHandler };
 
 export interface Routes {
-    [path: string]: RouteHandler;
+    [path: string]: RouteHandlerClass;
 }
 
 // Example routes
 const routes: Routes = {
-    '/': () => {
-        console.log('This is the homepage.');
-    },
-    '/about': () => {
-        console.log('This is the about page.');
-    },
-    '/contact/*': () => {
-        console.log('This is the contact page.');
-    },
+    // '/': ,
+    // '/about': () => {
+    //     console.log('This is the about page.');
+    // },
+    // '/contact/*': () => {
+    //     console.log('This is the contact page.');
+    // },
 };
+// const routes: Routes = {
+//     '/': () => {
+//         console.log('This is the homepage.');
+//     },
+//     '/about': () => {
+//         console.log('This is the about page.');
+//     },
+//     '/contact/*': () => {
+//         console.log('This is the contact page.');
+//     },
+// };
 
 export class RouteDispatcher {
 
@@ -31,7 +44,7 @@ export class RouteDispatcher {
 //        this.routes = {};
     }
 
-    matchRoute(path: string): RouteHandler | null {
+    matchRoute(path: string): RouteHandlerClass | null {
         for (const route in this.routes) {
             if (route.endsWith('*')) {
                 // If the route ends with *, treat it as a wildcard
@@ -47,14 +60,35 @@ export class RouteDispatcher {
         return null; // No matching route found
     }
     
-    dispatchRoute() {
+    setupRoute() {
+
+        // Pre-init site-level
+        (new Site().setup());
+
+        // Pre-init route-level
         const path = window.location.pathname;
-        const handler = this.matchRoute(path);
-        if (handler) {
-            handler();
+        const HandlerClass = this.matchRoute(path);
+        if (HandlerClass) {
+            const handlerInstance = new HandlerClass();
+            handlerInstance.setup(); 
         } else {
 //            console.log('No specific function for this path.');
-            // Default function or behavior for unspecified paths
+        }
+    }
+
+    execRoute() {
+
+        // Init site-level
+        (new Site().exec());
+
+        // Init route-level
+        const path = window.location.pathname;
+        const HandlerClass = this.matchRoute(path);
+        if (HandlerClass) {
+            const handlerInstance = new HandlerClass();
+            handlerInstance.exec(); 
+        } else {
+//            console.log('No specific function for this path.');
         }
     }
     

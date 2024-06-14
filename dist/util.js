@@ -15,6 +15,11 @@
     link.href = url;
     document.head.appendChild(link);
   }
+  function loadStyle(css) {
+    const style = document.createElement("style");
+    style.innerText = css;
+    document.head.appendChild(style);
+  }
   function replaceScriptSource(element, newSrc) {
     element.src = newSrc;
   }

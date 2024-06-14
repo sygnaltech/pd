@@ -1,0 +1,3 @@
+(() => {
+})();
+//# sourceMappingURL=IRouteHandler.js.map

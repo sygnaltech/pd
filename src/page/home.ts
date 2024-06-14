@@ -3,23 +3,23 @@
  * Page | Home
  */
 
-import { IModule } from "../IModule";
+import { IRouteHandler } from "../IRouteHandler";
 
 // import gsap from 'gsap'; 
  
 
-export class HomePage implements IModule {
+export class HomePage implements IRouteHandler {
 
 //  modelDropdown: WebflowDropdown; 
 
   constructor() {
   }
 
-  preInit() {
+  setup() {
         
   }
 
-  init() {
+  exec() {
 
     console.log("Home."); 
 

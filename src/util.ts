@@ -27,6 +27,15 @@ export function loadCSS(url: string): void {
     document.head.appendChild(link);
 }
 
+// Add a new Style element to the page
+export function loadStyle(css: string): void {
+    const style = document.createElement('style');
+//    link.rel = 'stylesheet';
+//    link.href = url;
+    style.innerText = css;
+    document.head.appendChild(style);
+}
+
 // Replace an existing script source
 export function replaceScriptSource(element: HTMLScriptElement, newSrc: string): void {
     element.src = newSrc;

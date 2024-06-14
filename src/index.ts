@@ -15,6 +15,7 @@ import { HomePage } from "./page/home";
 import { RouteDispatcher } from "./routeDispatcher";
 import { Site } from "./site";
 import { VERSION } from "./version";
+import { routeDispatcher } from "./routes";
 
 // Global vars
 const SITE_NAME = 'Site';
@@ -38,36 +39,33 @@ declare global {
     }
 }
 
-const init = () => {
+// Perform setup, sync
+const setup = () => {
     
     console.log(`${SITE_NAME} package init v${VERSION}`);
-
-    // Perform Site-wide actions
-    (new Site()).init();
     
-    var routeDispatcher = new RouteDispatcher();
-    routeDispatcher.routes = {
-        '/': () => {
+    routeDispatcher().setupRoute(); 
 
-            (new HomePage()).init();
+}
 
-        },
-        '/maternity': () => {
+// Perform exec, async
+// After DOM content loaded 
+const exec = () => {
+    
+    routeDispatcher().execRoute(); 
 
-            (new MaternityScanCalcPage()).init();
-
-        },
-
-    };
-    routeDispatcher.dispatchRoute(); 
 }
 
 /**
  * Initialize
  */
 
+// Perform setup, sync
+setup();
+
+// Perform exec, async
 if (document.readyState !== 'loading') {
-    init();
+    exec();
 } else {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", exec);
 }

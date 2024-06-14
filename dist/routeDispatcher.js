@@ -1,4 +1,15 @@
 (() => {
+  // src/site.ts
+  var Site = class {
+    constructor() {
+    }
+    setup() {
+    }
+    exec() {
+      console.log("Site.");
+    }
+  };
+
   // src/routeDispatcher.ts
   var RouteDispatcher = class {
     constructor() {
@@ -16,11 +27,23 @@
       }
       return null;
     }
-    dispatchRoute() {
+    setupRoute() {
+      new Site().setup();
       const path = window.location.pathname;
-      const handler = this.matchRoute(path);
-      if (handler) {
-        handler();
+      const HandlerClass = this.matchRoute(path);
+      if (HandlerClass) {
+        const handlerInstance = new HandlerClass();
+        handlerInstance.setup();
+      } else {
+      }
+    }
+    execRoute() {
+      new Site().exec();
+      const path = window.location.pathname;
+      const HandlerClass = this.matchRoute(path);
+      if (HandlerClass) {
+        const handlerInstance = new HandlerClass();
+        handlerInstance.exec();
       } else {
       }
     }
