@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/maternityCalc.ts"],
+  "sourcesContent": ["/*\n * SA5 Sygnal\n * Logic\n * \n */\n\n\n\n\n\nexport class MaternityCalc {\n\n    _edd: Date;\n\n    constructor(edd: Date) {\n      \n      this._edd = edd;\n\n    }\n\n    getLmpDate(): Date {\n      return this._edd;\n    }\n\n    getDayDate(day: number): Date {\n      return this._edd;\n    }\n\n    getWeekStartDate(week: number): Date {\n      return this._edd;\n    }\n\n    getWeekEndDate(week: number): Date {\n      return this._edd;\n    }\n\n    init() {\n\n\n\n    }\n\n    static createFromLMP(lmp: Date) {\n\n      return new MaternityCalc(lmp);\n\n    }\n    \n}\n\n"],
+  "mappings": ";;AAUO,MAAM,gBAAN,MAAoB;AAAA,IAIvB,YAAY,KAAW;AAErB,WAAK,OAAO;AAAA,IAEd;AAAA,IAEA,aAAmB;AACjB,aAAO,KAAK;AAAA,IACd;AAAA,IAEA,WAAW,KAAmB;AAC5B,aAAO,KAAK;AAAA,IACd;AAAA,IAEA,iBAAiB,MAAoB;AACnC,aAAO,KAAK;AAAA,IACd;AAAA,IAEA,eAAe,MAAoB;AACjC,aAAO,KAAK;AAAA,IACd;AAAA,IAEA,OAAO;AAAA,IAIP;AAAA,IAEA,OAAO,cAAc,KAAW;AAE9B,aAAO,IAAI,cAAc,GAAG;AAAA,IAE9B;AAAA,EAEJ;",
+  "names": []
+}

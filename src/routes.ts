@@ -14,13 +14,20 @@ import { MaternityScanCalcPage } from "./page/maternityScanCalc";
 import { HomePage } from "./page/home";
 import { RouteDispatcher } from "./routeDispatcher";
 import { VERSION } from "./version";
+import { TestWfuIfPage } from "./page/test-wfu-if";
 
 export const routeDispatcher = (): RouteDispatcher => {
     
     var routeDispatcher = new RouteDispatcher();
     routeDispatcher.routes = {
+
+        // Site paes
         '/': HomePage,
         '/maternity': MaternityScanCalcPage,
+
+        // TEST Pages
+        '/test/wfu-if': TestWfuIfPage, 
+
     };
 //    routeDispatcher.execRoute(); 
 

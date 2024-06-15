@@ -2363,6 +2363,136 @@
     document.head.appendChild(style);
   }
 
+  // src/debug.ts
+  var DEFAULT_APP_NAME = "Site";
+  var Debug = class {
+    constructor(label, appName = DEFAULT_APP_NAME) {
+      this._localStorageDebugFlag = "debug-mode";
+      this._appName = DEFAULT_APP_NAME;
+      this._enabled = false;
+      this._appName = appName;
+      this._label = label;
+    }
+    get persistentDebug() {
+      return Boolean(localStorage.getItem(this._localStorageDebugFlag));
+    }
+    set persistentDebug(active) {
+      if (active) {
+        localStorage.setItem(this._localStorageDebugFlag, "true");
+        console.debug(`${this._appName} debug enabled (persistent).`);
+      } else {
+        localStorage.removeItem(this._localStorageDebugFlag);
+        console.debug(`${this._appName} debug disabled (persistent).`);
+      }
+    }
+    get enabled() {
+      var wfuDebugValue = Boolean(localStorage.getItem(this._localStorageDebugFlag));
+      wfuDebugValue = wfuDebugValue || this._enabled;
+      return wfuDebugValue;
+    }
+    set enabled(active) {
+      this._enabled = active;
+    }
+    group(name) {
+      if (this.enabled)
+        console.group(name);
+    }
+    groupEnd() {
+      if (this.enabled)
+        console.groupEnd();
+    }
+    debug(...args) {
+      if (this.enabled)
+        console.debug(this._label, ...args);
+    }
+  };
+
+  // src/sa5/logic.ts
+  var SA5Logic = class {
+    constructor() {
+    }
+    init() {
+      var elements;
+      elements = document.querySelectorAll("[wfu-logic-if]");
+      elements.forEach((element) => {
+        new SA5LogicIf(element).init();
+      });
+      elements = document.querySelectorAll("[wfu-logic-switch]");
+      elements.forEach((element) => {
+        new SA5LogicSwitch(element).init();
+      });
+    }
+  };
+  var SA5LogicIf = class {
+    constructor(elem) {
+      this._data = {};
+      this._elem = elem;
+      this.debug = new Debug("SA5 Logic");
+    }
+    init() {
+      console.log("SA5 logic IF ");
+      const dataAttributes = this._elem.attributes;
+      for (let i = 0; i < dataAttributes.length; i++) {
+        const attr = dataAttributes[i];
+        const attrName = attr.name.toLowerCase();
+        if (attrName.startsWith("wfu-logic-param-")) {
+          const key = attrName.slice("wfu-logic-param-".length);
+          this._data[key] = attr.value !== "" ? attr.value : null;
+        }
+      }
+      console.log();
+      const descendants = this._elem.querySelectorAll("[wfu-logic-if-display]");
+      descendants.forEach((descendant) => {
+        const condition = descendant.getAttribute("wfu-logic-if-display");
+        const shouldDisplay = this.evaluateCondition(condition, this._data);
+        if (shouldDisplay) {
+          descendant.style.display = "";
+        } else {
+          descendant.style.display = "none";
+        }
+      });
+      this._elem.removeAttribute("wfu-preload");
+    }
+    evaluateCondition(condition, context) {
+      try {
+        return new Function("with(this) { return " + condition + "; }").call(context);
+      } catch (e) {
+        console.error("Error evaluating condition:", condition, e);
+        return false;
+      }
+    }
+  };
+  var SA5LogicSwitch = class {
+    constructor(elem) {
+      this._elem = elem;
+      this.debug = new Debug("SA5 Logic");
+      this._val = elem.getAttribute("wfu-logic-switch");
+    }
+    init() {
+      console.log("SA5 logic SWITCH ");
+      console.log();
+      const descendants = this._elem.querySelectorAll("[wfu-logic-switch-case]");
+      descendants.forEach((descendant) => {
+        const condition = descendant.getAttribute("wfu-logic-switch-case");
+        const shouldDisplay = this.evaluateCondition(condition, this._val);
+        if (shouldDisplay) {
+          descendant.style.display = "";
+        } else {
+          descendant.style.display = "none";
+        }
+      });
+      this._elem.removeAttribute("wfu-preload");
+    }
+    evaluateCondition(condition, context) {
+      try {
+        return condition == context;
+      } catch (e) {
+        console.error("Error evaluating condition:", condition, e);
+        return false;
+      }
+    }
+  };
+
   // src/page/maternityScanCalc.ts
   var QUERY_PARAM_EDD = "edd";
   var MaternityScanCalcPage = class {
@@ -2396,6 +2526,7 @@
       } else {
         console.error("Element with ID 'timeline' not found.");
       }
+      new SA5Logic().init();
       const eddValue = searchParams.get(QUERY_PARAM_EDD);
       if (eddValue) {
         const parsedDate = new Date(eddValue);
@@ -2559,6 +2690,16 @@
     constructor() {
     }
     setup() {
+      const currentScript = document.currentScript;
+      if (!currentScript) {
+        console.log("Could not determine the current script.");
+        return;
+      }
+      const fullUrl = new URL(currentScript.src);
+      const pathWithoutFile = fullUrl.origin + fullUrl.pathname.substring(0, fullUrl.pathname.lastIndexOf("/") + 1);
+      console.log("Current script URL without file name:", pathWithoutFile);
+      console.log("installing site CSS");
+      loadCSS(pathWithoutFile + "css/index.css");
     }
     exec() {
       console.log("Site.");
@@ -2604,12 +2745,25 @@
     }
   };
 
+  // src/page/test-wfu-if.ts
+  var TestWfuIfPage = class {
+    constructor() {
+    }
+    setup() {
+    }
+    exec() {
+      console.log("Test Wfu If.");
+      new SA5Logic().init();
+    }
+  };
+
   // src/routes.ts
   var routeDispatcher = () => {
     var routeDispatcher2 = new RouteDispatcher();
     routeDispatcher2.routes = {
       "/": HomePage,
-      "/maternity": MaternityScanCalcPage
+      "/maternity": MaternityScanCalcPage,
+      "/test/wfu-if": TestWfuIfPage
     };
     return routeDispatcher2;
   };

@@ -29,6 +29,7 @@ import { calculateEDDfromLMP } from "../../util";
 import { Instance } from "flatpickr/dist/types/instance";
 import { IRouteHandler } from "../IRouteHandler";
 import { loadCSS, loadStyle } from "../util";
+import { SA5Logic } from "../sa5/logic";
 
 
 enum PageMode {
@@ -97,6 +98,10 @@ export class MaternityScanCalcPage implements IRouteHandler {
         } else {
             console.error("Element with ID 'timeline' not found.");
         }
+
+        // Apply Conditional Visibility 
+
+        (new SA5Logic()).init(); 
 
         /**
          * Determine Page Mode
