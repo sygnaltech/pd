@@ -1,4 +1,4 @@
-import fetchCSVData from './csvData';
+import { fetchCSVData } from './csvData';
 import { MaternityCalc } from '../src/maternityCalc';
 
 describe('MaternityCalc', () => {
@@ -7,7 +7,7 @@ describe('MaternityCalc', () => {
   beforeAll(async () => {
     const csvUrl = 'https://docs.google.com/spreadsheets/d/1DREayEscT7YyWCNQQLSkHjeVFi5bON1KODZxTIJQEnk/export?format=csv';
     sheetData = await fetchCSVData(csvUrl);
-    console.log(sheetData); 
+//    console.log(sheetData); 
   });
 
   test('should calculate LMP date correctly', () => {
