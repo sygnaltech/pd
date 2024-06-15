@@ -1,30 +1,28 @@
+import { MaternityCalc } from "./src/maternityCalc";
 
 
+
+export function formatISODate(date: Date): string {
+    return date.toISOString().split('T')[0];
+}
 
 /**
  * Estimates the due date using Naegele's rule 
  * @param lmp Date of last menstral period (LMP)
  * @returns 
  */
-export function calculateEDDfromLMP(lmp: string): string {
-    const date = new Date(lmp);
-    date.setFullYear(date.getFullYear() + 1); // Add one year
-    date.setMonth(date.getMonth() - 3); // Subtract three months
-    date.setDate(date.getDate() + 7); // Add seven days
+export function calculateEDDfromLMP(lmp: string): Date {
 
-    return date.toISOString().split('T')[0]; // Return as YYYY-MM-DD
+    const maternityCalc: MaternityCalc = MaternityCalc.createFromLMP(new Date(lmp)); 
+
+    return maternityCalc._edd; 
 }
 
-export function calculateLMPfromEDD(edd: string): string {
-    const eddDate = new Date(edd);
-    const daysInPregnancy = 280; // Standard gestation period of 40 weeks
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+export function calculateLMPfromEDD(edd: string): Date {
 
-    // Calculate the LMP by subtracting 280 days from the EDD
-    const lmpDate = new Date(eddDate.getTime() - daysInPregnancy * millisecondsPerDay);
+    const maternityCalc: MaternityCalc = new MaternityCalc(new Date(edd)); 
 
-    // Return the LMP in YYYY-MM-DD format
-    return lmpDate.toISOString().split('T')[0];
+    return maternityCalc.lmpDate;
 }
 
 

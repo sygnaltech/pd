@@ -25,11 +25,12 @@
 //const url: string = 'https://www.sygnal.com?thisisatrackingurlthsfdsfsdsdatdoesstuff';
 
 import flatpickr from "flatpickr";
-import { calculateEDDfromLMP } from "../../util";
+import { calculateEDDfromLMP, formatISODate } from "../../util";
 import { Instance } from "flatpickr/dist/types/instance";
 import { IRouteHandler } from "../IRouteHandler";
 import { loadCSS, loadStyle } from "../util";
 import { SA5Logic } from "../sa5/logic";
+import { MaternityCalc } from "../maternityCalc";
 
 
 enum PageMode {
@@ -45,6 +46,8 @@ export class MaternityScanCalcPage implements IRouteHandler {
 
     _mode: PageMode = PageMode.Calc;
     _edd: Date | null = null;
+
+
 
     // _fpEDD: Instance | Instance[]; // = flatpickr("#edd", {});
     // _fpLMP: Instance | Instance[];// = flatpickr("#lmp", {});
@@ -116,6 +119,8 @@ export class MaternityScanCalcPage implements IRouteHandler {
                 this._mode = PageMode.Display;
                 this._edd = parsedDate;
 
+
+
                 this._fpEDD.setDate(parsedDate, true);
 
             } else {
@@ -139,7 +144,7 @@ export class MaternityScanCalcPage implements IRouteHandler {
                 console.log("calc button clicked", edd)
                 const eddDate: Date = new Date(edd); 
 //                const eddDate = calculateEDD(lmpDate);
-                const formattedDate = eddDate.toISOString().split('T')[0];
+                const formattedDate = formatISODate(eddDate); // eddDate.toISOString().split('T')[0];
 
                 // Reload the page with the new query string
                 window.location.href = `${window.location.pathname}?edd=${formattedDate}`;
@@ -175,22 +180,26 @@ export class MaternityScanCalcPage implements IRouteHandler {
             return; 
         }
 
+        const calc: MaternityCalc = new MaternityCalc(this._edd); 
+
 // display-value progress
         /**
          * Progress
          */
 
-        // Calculate the start date (LMP)
-        const lmp = new Date(this._edd.getTime()); // Copy EDD 
-        lmp.setDate(lmp.getDate() - 280); // 280 days before EDD
+        // // Calculate the start date (LMP)
+        // const lmp = new Date(this._edd.getTime()); // Copy EDD 
+        // lmp.setDate(lmp.getDate() - 280); // 280 days before EDD
 
-        // Calculate the difference between the LMP and today
-        const today = new Date();
-        const diffTime = Math.abs(today.getTime() - lmp.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        // // Calculate the difference between the LMP and today
+        // const today = new Date();
+        // const diffTime = Math.abs(today.getTime() - lmp.getTime());
+        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        const weeks = Math.floor(diffDays / 7);
-        const days = diffDays % 7;
+
+
+        const weeks = Math.floor(calc.dayOf / 7);
+        const days = calc.dayOf % 7;
 
         // Format the date in a readable format
         const readableDate = this._edd.toLocaleDateString('en-NZ', {
@@ -209,13 +218,15 @@ export class MaternityScanCalcPage implements IRouteHandler {
 
 this.updateDisplayValues(data);
 
-const maternityWeek = weeks + 1; 
+const maternityWeek = calc.weekOf; //   weeks + 1; 
 
         /**
          * Calc service week-dates
          */
 
-        this.calculateAndDisplayTimelineWeekDates(lmp); 
+        this.calculateAndDisplayTimelineWeekDates(
+            calc
+        ); 
 
 
         /**
@@ -225,7 +236,7 @@ const maternityWeek = weeks + 1;
          *   - calc display area 
          */
 
-this.updateVisibilityBasedOnWeek(maternityWeek); 
+        this.updateVisibilityBasedOnWeek(maternityWeek); 
 
 
         /**
@@ -260,7 +271,7 @@ this.updateVisibilityBasedOnWeek(maternityWeek);
         return `${date.toDateString()} ${diffText}`;
     }
 
-    calculateAndDisplayTimelineWeekDates(lmp: Date) {
+    calculateAndDisplayTimelineWeekDates(calc: MaternityCalc) {
 
         // Calc and display week start dates 
         const startDateElements = document.querySelectorAll('[week-startdate]');
@@ -270,7 +281,7 @@ this.updateVisibilityBasedOnWeek(maternityWeek);
           if (weekStr) {
             const week = parseInt(weekStr) - 1;
             if (!isNaN(week)) {
-              const calculatedDate = new Date(lmp);
+              const calculatedDate = new Date(calc.lmpDate);
               calculatedDate.setDate(calculatedDate.getDate() + (week * 7));
               (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
             }
@@ -285,7 +296,7 @@ this.updateVisibilityBasedOnWeek(maternityWeek);
           if (weekStr) {
             const week = parseInt(weekStr) - 1;
             if (!isNaN(week)) {
-              const calculatedDate = new Date(lmp);
+              const calculatedDate = new Date(calc.lmpDate);
               calculatedDate.setDate(calculatedDate.getDate() + (week * 7) + 6); // Add 6 days for end of week
               (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
             }

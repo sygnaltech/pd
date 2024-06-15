@@ -2338,13 +2338,53 @@
   }
   var esm_default = flatpickr;
 
+  // src/maternityCalc.ts
+  var DAYS_IN_PREGNANCY = 280;
+  var MaternityCalc = class {
+    constructor(edd) {
+      this._edd = edd;
+    }
+    get lmpDate() {
+      const eddDate = new Date(this._edd);
+      const millisecondsPerDay = 1e3 * 60 * 60 * 24;
+      const lmpDate = new Date(eddDate.getTime() - DAYS_IN_PREGNANCY * millisecondsPerDay);
+      return lmpDate;
+    }
+    get dayOf() {
+      const today = new Date();
+      const diffTime = Math.abs(today.getTime() - this.lmpDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
+      return diffDays + 1;
+    }
+    get weekOf() {
+      const weeks = Math.floor(this.dayOf / 7);
+      return weeks + 1;
+    }
+    getDayDate(day) {
+      return this._edd;
+    }
+    getWeekStartDate(week) {
+      return this._edd;
+    }
+    getWeekEndDate(week) {
+      return this._edd;
+    }
+    static createFromLMP(lmp) {
+      const date = new Date(lmp);
+      date.setFullYear(date.getFullYear() + 1);
+      date.setMonth(date.getMonth() - 3);
+      date.setDate(date.getDate() + 7);
+      return new MaternityCalc(date);
+    }
+  };
+
   // util.ts
-  function calculateEDDfromLMP(lmp) {
-    const date = new Date(lmp);
-    date.setFullYear(date.getFullYear() + 1);
-    date.setMonth(date.getMonth() - 3);
-    date.setDate(date.getDate() + 7);
+  function formatISODate(date) {
     return date.toISOString().split("T")[0];
+  }
+  function calculateEDDfromLMP(lmp) {
+    const maternityCalc = MaternityCalc.createFromLMP(new Date(lmp));
+    return maternityCalc._edd;
   }
 
   // src/util.ts
@@ -2543,7 +2583,7 @@
           const edd = calculateEDDfromLMP(lmpInput.value);
           console.log("calc button clicked", edd);
           const eddDate = new Date(edd);
-          const formattedDate = eddDate.toISOString().split("T")[0];
+          const formattedDate = formatISODate(eddDate);
           window.location.href = `${window.location.pathname}?edd=${formattedDate}`;
         }
       });
@@ -2566,13 +2606,9 @@
         console.error("No EDD set.");
         return;
       }
-      const lmp = new Date(this._edd.getTime());
-      lmp.setDate(lmp.getDate() - 280);
-      const today = new Date();
-      const diffTime = Math.abs(today.getTime() - lmp.getTime());
-      const diffDays = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
-      const weeks = Math.floor(diffDays / 7);
-      const days = diffDays % 7;
+      const calc = new MaternityCalc(this._edd);
+      const weeks = Math.floor(calc.dayOf / 7);
+      const days = calc.dayOf % 7;
       const readableDate = this._edd.toLocaleDateString("en-NZ", {
         weekday: "short",
         year: "numeric",
@@ -2584,8 +2620,10 @@
         progress: `${weeks} weeks and ${days} days`
       };
       this.updateDisplayValues(data);
-      const maternityWeek = weeks + 1;
-      this.calculateAndDisplayTimelineWeekDates(lmp);
+      const maternityWeek = calc.weekOf;
+      this.calculateAndDisplayTimelineWeekDates(
+        calc
+      );
       this.updateVisibilityBasedOnWeek(maternityWeek);
       timelineElement.style.display = "block";
     }
@@ -2607,14 +2645,14 @@
       }
       return `${date.toDateString()} ${diffText}`;
     }
-    calculateAndDisplayTimelineWeekDates(lmp) {
+    calculateAndDisplayTimelineWeekDates(calc) {
       const startDateElements = document.querySelectorAll("[week-startdate]");
       startDateElements.forEach((element) => {
         const weekStr = element.getAttribute("week-startdate");
         if (weekStr) {
           const week = parseInt(weekStr) - 1;
           if (!isNaN(week)) {
-            const calculatedDate = new Date(lmp);
+            const calculatedDate = new Date(calc.lmpDate);
             calculatedDate.setDate(calculatedDate.getDate() + week * 7);
             element.innerText = this.formatDateWithDifference(calculatedDate);
           }
@@ -2626,7 +2664,7 @@
         if (weekStr) {
           const week = parseInt(weekStr) - 1;
           if (!isNaN(week)) {
-            const calculatedDate = new Date(lmp);
+            const calculatedDate = new Date(calc.lmpDate);
             calculatedDate.setDate(calculatedDate.getDate() + week * 7 + 6);
             element.innerText = this.formatDateWithDifference(calculatedDate);
           }
