@@ -1,3 +1,4 @@
+"use strict";
 (() => {
   // src/debug.ts
   var DEFAULT_APP_NAME = "Site";

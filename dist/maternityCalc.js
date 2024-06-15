@@ -1,3 +1,4 @@
+"use strict";
 (() => {
   // src/maternityCalc.ts
   var DAYS_IN_PREGNANCY = 280;

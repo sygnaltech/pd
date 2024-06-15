@@ -8,6 +8,8 @@
 // Standard gestation period of 40 weeks
 const DAYS_IN_PREGNANCY = 280;
 
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
 export class MaternityCalc {
 
     _edd: Date;
@@ -18,15 +20,29 @@ export class MaternityCalc {
 
     }
     
+    // Gestational Age: This is the age of the pregnancy calculated from the first day of the LMP. This method assumes a standard 28-day menstrual cycle and a 40-week pregnancy duration (280 days).
     get lmpDate(): Date {
 
       const eddDate = new Date(this._edd);
-      const millisecondsPerDay = 1000 * 60 * 60 * 24;
   
       // Calculate the LMP by subtracting 280 days from the EDD
-      const lmpDate = new Date(eddDate.getTime() - DAYS_IN_PREGNANCY * millisecondsPerDay);
+      const lmpDate = new Date(
+        eddDate.getTime() - DAYS_IN_PREGNANCY * MS_PER_DAY
+      );
   
       return lmpDate;
+    }
+
+    // Embryonic Age: This is the actual age of the embryo, which is approximately 2 weeks less than the gestational age, as it starts counting from the time of conception, which usually occurs about 2 weeks after the LMP.
+    get conceptionDate(): Date {
+      const lmpDate = new Date(this.lmpDate);
+  
+      // Calculate the LMP by subtracting 280 days from the EDD
+      const conceptionDate = new Date(
+        lmpDate.getTime() + 14 * MS_PER_DAY
+      );
+
+      return conceptionDate;
     }
 
     // 1-based

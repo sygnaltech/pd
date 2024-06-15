@@ -1,3 +1,4 @@
+"use strict";
 (() => {
   // src/version.ts
   var VERSION = "0.1.1";
@@ -2579,7 +2580,7 @@
         }
       }
       const button = document.getElementById("calc-edd");
-      button?.addEventListener("click", () => {
+      button == null ? void 0 : button.addEventListener("click", () => {
         const lmpInput = document.getElementById("lmp");
         if (lmpInput && lmpInput.value) {
           console.log("calc button clicked");
@@ -2591,7 +2592,7 @@
         }
       });
       const buttonCalc = document.getElementById("calc");
-      buttonCalc?.addEventListener("click", () => {
+      buttonCalc == null ? void 0 : buttonCalc.addEventListener("click", () => {
         const selectedDate = this._fpEDD.selectedDates[0];
         if (selectedDate) {
           const year = selectedDate.getFullYear();
