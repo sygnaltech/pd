@@ -27,8 +27,6 @@ describe('MaternityCalc', () => {
     });
   });
 
-// return; 
-
   test('should calculate LMP date correctly', () => {
     sheetData.forEach(row => {
       const edd = new Date(row.EDD);
@@ -73,7 +71,7 @@ describe('MaternityCalc', () => {
 // else
 //   console.error('Failed for ' + message); 
 
-expect(maternityCalc.dayOf).toBe(expectedDayOf);
+      expect(maternityCalc.dayOf).toBe(expectedDayOf);
 
 //expect(maternityCalc.dayOf).toBeWithDetails(expectedDayOf, details);
 

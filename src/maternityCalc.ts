@@ -112,13 +112,13 @@ export class MaternityCalc {
       // .startOf('day'); 
 
       // https://moment.github.io/luxon/#/math
-      let eddDate = lmpDate.plus({ years: 1 }); // Add one year
-      eddDate = eddDate.minus({ months: 3 }); // Subtract three months
-      eddDate = eddDate.plus({ days: 7 }); // Add seven days
+      // let eddDate = lmpDate.plus({ years: 1 }); // Add one year
+      // eddDate = eddDate.minus({ months: 3 }); // Subtract three months
+      // eddDate = eddDate.plus({ days: 7 }); // Add seven days
 //      eddDate = eddDate.startOf('day'); // Ensure we are at the start of the day (midnight)
+// console.log("LMP + 1 year - 3 months + 7 days:", eddDate.toISO());
   
-
-    console.log("LMP + 1 year - 3 months + 7 days:", eddDate.toISO());
+      let eddDate = lmpDate.plus({ days: 280 });
 
 // //    const eddJSDate = new Date(eddDate.year, eddDate.month - 1, eddDate.day);
 //     // Extract the year, month, and day from the Luxon DateTime object
@@ -128,17 +128,13 @@ export class MaternityCalc {
 //     }    // Create a JavaScript Date object using the extracted parts
 //     const eddJSDate = new Date(year, month - 1, day);
 
-    const eddJSDate = new Date(`${eddDate.year}-${String(eddDate.month).padStart(2, '0')}-${String(eddDate.day).padStart(2, '0')}`);
+      const eddJSDate = new Date(`${eddDate.year}-${String(eddDate.month).padStart(2, '0')}-${String(eddDate.day).padStart(2, '0')}`);
 
-
-      console.log("Breakdown\r\n" + 
-        `LMP: ${lmpDate.toISO()}\r\n` +
-        `LMP + 1 year: ${lmpDate.plus({ years: 1 }).toISO()}\r\n` +
-        `LMP - 3 months: ${lmpDate.plus({ years: 1 }).minus({ months: 3 }).toISO()}\r\n` +
-        `EDD: ${eddDate.toISO()}\r\n` +
-        `AsJS: ${eddJSDate.toISOString()}`
-      )
-
+      // console.log("Breakdown\r\n" + 
+      //   `LMP: ${lmpDate.toISO()}\r\n` +
+      //   `LMP + 280: ${lmpDate.plus({ days: 280 }).toISO()}\r\n` +
+      //   `AsJS: ${eddJSDate.toISOString()}`
+      // )
 
       return new MaternityCalc(eddJSDate);
 //    return new MaternityCalc(eddDate.toJSDate());
