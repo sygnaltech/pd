@@ -2341,19 +2341,31 @@
 
   // src/maternityCalc.ts
   var DAYS_IN_PREGNANCY = 280;
+  var MS_PER_DAY = 1e3 * 60 * 60 * 24;
   var MaternityCalc = class {
     constructor(edd) {
       this._edd = edd;
     }
     get lmpDate() {
       const eddDate = new Date(this._edd);
-      const millisecondsPerDay = 1e3 * 60 * 60 * 24;
-      const lmpDate = new Date(eddDate.getTime() - DAYS_IN_PREGNANCY * millisecondsPerDay);
+      const lmpDate = new Date(
+        eddDate.getTime() - DAYS_IN_PREGNANCY * MS_PER_DAY
+      );
       return lmpDate;
+    }
+    get conceptionDate() {
+      const lmpDate = new Date(this.lmpDate);
+      const conceptionDate = new Date(
+        lmpDate.getTime() + 14 * MS_PER_DAY
+      );
+      return conceptionDate;
     }
     get dayOf() {
       const today = new Date();
-      const diffTime = Math.abs(today.getTime() - this.lmpDate.getTime());
+      today.setHours(0, 0, 0, 0);
+      const lmpDate = new Date(this.lmpDate);
+      lmpDate.setHours(0, 0, 0, 0);
+      const diffTime = Math.abs(today.getTime() - lmpDate.getTime());
       const diffDays = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
       return diffDays + 1;
     }

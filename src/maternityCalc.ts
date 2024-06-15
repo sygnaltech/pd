@@ -47,13 +47,20 @@ export class MaternityCalc {
 
     // 1-based
     get dayOf(): number {
-        // Calculate the difference between the LMP and today
-        const today = new Date();
-        const diffTime = Math.abs(today.getTime() - this.lmpDate.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // Normalize the dates to remove the time portion
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Set the time of today to midnight
+  
+      const lmpDate = new Date(this.lmpDate);
+      lmpDate.setHours(0, 0, 0, 0); // Set the time of lmpDate to midnight
 
-        return diffDays + 1; 
-    }
+      // Calculate the difference in time between the normalized dates
+      const diffTime = Math.abs(today.getTime() - lmpDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+      return diffDays + 1;
+  }
+  
 
     // 1-based
     get weekOf(): number {
