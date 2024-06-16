@@ -1,7 +1,7 @@
 "use strict";
 (() => {
   // src/version.ts
-  var VERSION = "0.1.1";
+  var VERSION = "0.1.2";
 
   // node_modules/flatpickr/dist/esm/types/options.js
   var HOOKS = [
@@ -7248,7 +7248,7 @@
     var routeDispatcher2 = new RouteDispatcher();
     routeDispatcher2.routes = {
       "/": HomePage,
-      "/maternity": MaternityScanCalcPage,
+      "/scan": MaternityScanCalcPage,
       "/test/wfu-if": TestWfuIfPage
     };
     return routeDispatcher2;

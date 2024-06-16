@@ -7245,7 +7245,7 @@
     var routeDispatcher2 = new RouteDispatcher();
     routeDispatcher2.routes = {
       "/": HomePage,
-      "/maternity": MaternityScanCalcPage,
+      "/scan": MaternityScanCalcPage,
       "/test/wfu-if": TestWfuIfPage
     };
     return routeDispatcher2;

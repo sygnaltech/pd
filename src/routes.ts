@@ -23,7 +23,7 @@ export const routeDispatcher = (): RouteDispatcher => {
 
         // Site paes
         '/': HomePage,
-        '/maternity': MaternityScanCalcPage,
+        '/scan': MaternityScanCalcPage,
 
         // TEST Pages
         '/test/wfu-if': TestWfuIfPage, 
