@@ -10,19 +10,23 @@
  * 
  */
 
-import { MaternityScanCalcPage } from "./page/maternityScanCalc"; 
-import { HomePage } from "./page/home";
-import { RouteDispatcher } from "./routeDispatcher";
-import { Site } from "./site";
 import { VERSION } from "./version";
 import { routeDispatcher } from "./routes";
 
+interface SiteDataType {
+    // Define properties and their types for SiteDataType
+    // For example:
+    someProperty?: string;
+    anotherProperty?: number;
+    // Add other properties as needed
+}
+
 // Global vars
-const SITE_NAME = 'Site';
+const SITE_NAME: string = 'Site';
 
 // Global object
-window[SITE_NAME] = window[SITE_NAME] || {}; 
-var SiteData = window[SITE_NAME];
+// window[SITE_NAME] = window[SITE_NAME] || {}; 
+// var SiteData = window[SITE_NAME];
 
 // Extend the Window interface to include globals
 // as a Typescript accessibility convenience
@@ -31,7 +35,7 @@ declare global {
 
         // Finsweet attributes
         fsAttributes: [string, (filterInstances: any[]) => void][];
-
+        Site: SiteDataType
         //   modelsDataSourceElems: NodeListOf<HTMLElement>;
         //   modelsSelectElem: HTMLElement | null;
         //   modelsNavElem: HTMLElement | null; 

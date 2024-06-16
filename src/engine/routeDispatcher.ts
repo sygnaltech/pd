@@ -4,9 +4,20 @@
  * 
  */
 
-import { IRouteHandler } from "./IRouteHandler";
-import { Site } from "./site";
+import { Site } from "../site";
 
+
+ 
+
+export interface IRouteHandler {
+
+    setup(): void;
+    
+    exec(): void; 
+  
+}
+
+  
 type RouteHandler = () => void;
 type RouteHandlerClass = { new (): IRouteHandler };
 
@@ -14,34 +25,11 @@ export interface Routes {
     [path: string]: RouteHandlerClass;
 }
 
-// Example routes
-const routes: Routes = {
-    // '/': ,
-    // '/about': () => {
-    //     console.log('This is the about page.');
-    // },
-    // '/contact/*': () => {
-    //     console.log('This is the contact page.');
-    // },
-};
-// const routes: Routes = {
-//     '/': () => {
-//         console.log('This is the homepage.');
-//     },
-//     '/about': () => {
-//         console.log('This is the about page.');
-//     },
-//     '/contact/*': () => {
-//         console.log('This is the contact page.');
-//     },
-// };
-
 export class RouteDispatcher {
 
-    routes: Routes;
+    routes!: Routes;
 
     constructor() {
-//        this.routes = {};
     }
 
     matchRoute(path: string): RouteHandlerClass | null {

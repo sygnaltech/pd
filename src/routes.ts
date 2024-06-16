@@ -12,7 +12,7 @@
 
 import { MaternityScanCalcPage } from "./page/maternityScanCalc"; 
 import { HomePage } from "./page/home";
-import { RouteDispatcher } from "./routeDispatcher";
+import { RouteDispatcher } from "./engine/routeDispatcher";
 import { VERSION } from "./version";
 import { TestWfuIfPage } from "./page/test-wfu-if";
 

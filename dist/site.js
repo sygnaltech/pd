@@ -1,6 +1,6 @@
 "use strict";
 (() => {
-  // src/util.ts
+  // src/engine/core.ts
   function loadCSS(url) {
     const link = document.createElement("link");
     link.rel = "stylesheet";

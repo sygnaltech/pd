@@ -4,7 +4,7 @@
  * 
  */
 
-import { Debug } from "../debug";
+import { Debug } from "../engine/debug";
 
 
 
@@ -63,7 +63,7 @@ console.log()
         const descendants: NodeListOf<HTMLElement> = this._elem.querySelectorAll<HTMLElement>('[wfu-logic-if-display]');
 
         descendants.forEach(descendant => {
-          const condition = descendant.getAttribute('wfu-logic-if-display');
+          const condition: string = descendant.getAttribute('wfu-logic-if-display') as string;
           const shouldDisplay = this.evaluateCondition(condition, this._data);
 
           if (shouldDisplay) {
@@ -78,7 +78,7 @@ console.log()
 
     }
     
-    evaluateCondition(condition, context) {
+    evaluateCondition(condition: string, context: any): boolean {
         try {
           return new Function('with(this) { return ' + condition + '; }').call(context);
         } catch (e) {
@@ -114,7 +114,7 @@ console.log()
         const descendants: NodeListOf<HTMLElement> = this._elem.querySelectorAll<HTMLElement>('[wfu-logic-switch-case]');
 
         descendants.forEach(descendant => {
-          const condition = descendant.getAttribute('wfu-logic-switch-case');
+          const condition: string = descendant.getAttribute('wfu-logic-switch-case') as string;
           const shouldDisplay = this.evaluateCondition(condition, this._val);
 
           if (shouldDisplay) {
@@ -129,7 +129,7 @@ console.log()
 
     }
     
-    evaluateCondition(condition, context) {
+    evaluateCondition(condition: string, context: any): boolean {
         try {
           return condition == context; // new Function('with(this) { return ' + condition + '; }').call(context);
         } catch (e) {

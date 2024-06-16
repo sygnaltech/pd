@@ -6824,12 +6824,12 @@
     }
   };
 
-  // util.ts
+  // src/util.ts
   function formatISODate(date) {
     return date.toISOString().split("T")[0];
   }
 
-  // src/util.ts
+  // src/engine/core.ts
   function loadCSS(url) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -6842,7 +6842,7 @@
     document.head.appendChild(style);
   }
 
-  // src/debug.ts
+  // src/engine/debug.ts
   var DEFAULT_APP_NAME = "Site";
   var Debug = class {
     constructor(label, appName = DEFAULT_APP_NAME) {
@@ -7192,7 +7192,7 @@
     }
   };
 
-  // src/routeDispatcher.ts
+  // src/engine/routeDispatcher.ts
   var RouteDispatcher = class {
     constructor() {
     }
@@ -7256,8 +7256,6 @@
 
   // src/index.ts
   var SITE_NAME = "Site";
-  window[SITE_NAME] = window[SITE_NAME] || {};
-  var SiteData = window[SITE_NAME];
   var setup = () => {
     console.log(`${SITE_NAME} package init v${VERSION}`);
     routeDispatcher().setupRoute();

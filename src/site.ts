@@ -4,7 +4,7 @@
  */
 
 import { IRouteHandler } from "./IRouteHandler";
-import { loadCSS } from "./util";
+import { loadCSS } from "./engine/core";
 
 // import gsap from 'gsap'; 
  

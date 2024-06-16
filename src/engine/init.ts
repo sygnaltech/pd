@@ -5,7 +5,7 @@
  */
 
 import Cookies from 'js-cookie';
-import { getCurrentScriptUrl, getQueryParam, loadScript, prependToTitle, replaceCSSLink } from './util';
+import { getCurrentScriptUrl, getQueryParam, loadScript, prependToTitle, replaceCSSLink } from './core';
 
 
 // Bring in script lib loading tools 

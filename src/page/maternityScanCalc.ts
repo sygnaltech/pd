@@ -25,10 +25,10 @@
 //const url: string = 'https://www.sygnal.com?thisisatrackingurlthsfdsfsdsdatdoesstuff';
 
 import flatpickr from "flatpickr";
-import { formatISODate } from "../../util";
+import { formatISODate } from "../util";
 import { Instance } from "flatpickr/dist/types/instance";
-import { IRouteHandler } from "../IRouteHandler";
-import { loadCSS, loadStyle } from "../util";
+import { IRouteHandler } from "../engine/routeDispatcher";
+import { loadCSS, loadStyle } from "../engine/core";
 import { SA5Logic } from "../sa5/logic";
 import { MaternityCalc } from "../maternityCalc";
 
