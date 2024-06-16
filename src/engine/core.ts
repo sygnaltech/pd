@@ -142,7 +142,7 @@ async function getResponseHeader(headerName: string, url: string | undefined = u
     if(!headers.has(headerName)) 
         return undefined;
 
-    return headers[headerName];
+    return headers.get(headerName) || undefined;
 
 }
 
