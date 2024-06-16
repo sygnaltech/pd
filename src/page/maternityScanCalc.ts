@@ -25,7 +25,7 @@
 //const url: string = 'https://www.sygnal.com?thisisatrackingurlthsfdsfsdsdatdoesstuff';
 
 import flatpickr from "flatpickr";
-import { calculateEDDfromLMP, formatISODate } from "../../util";
+import { formatISODate } from "../../util";
 import { Instance } from "flatpickr/dist/types/instance";
 import { IRouteHandler } from "../IRouteHandler";
 import { loadCSS, loadStyle } from "../util";
@@ -51,8 +51,10 @@ export class MaternityScanCalcPage implements IRouteHandler {
 
     // _fpEDD: Instance | Instance[]; // = flatpickr("#edd", {});
     // _fpLMP: Instance | Instance[];// = flatpickr("#lmp", {});
-    _fpEDD: flatpickr.Instance; // Assuming you're using the flatpickr instance type
-    _fpLMP: flatpickr.Instance; // Assuming you're using the flatpickr instance type
+    _fpEDD!: flatpickr.Instance; 
+    _fpLMP!: flatpickr.Instance; 
+    // _fpEDD: flatpickr.Instance | null = null; 
+    // _fpLMP: flatpickr.Instance | null = null; 
 
     constructor() { 
     }
@@ -91,6 +93,11 @@ export class MaternityScanCalcPage implements IRouteHandler {
             dateFormat: "Y-m-d"
         }) as flatpickr.Instance;
 
+        if (!this._fpEDD || !this._fpLMP) {
+            console.error("Cannot initialize Flatpickr controls");
+            return;
+        }
+
         // Default page mode 
         this._mode = PageMode.Calc;
 
@@ -119,8 +126,6 @@ export class MaternityScanCalcPage implements IRouteHandler {
                 this._mode = PageMode.Display;
                 this._edd = parsedDate;
 
-
-
                 this._fpEDD.setDate(parsedDate, true);
 
             } else {
@@ -139,12 +144,13 @@ export class MaternityScanCalcPage implements IRouteHandler {
             const lmpInput = document.getElementById('lmp') as HTMLInputElement;
             if (lmpInput && lmpInput.value) {
                 console.log("calc button clicked")
-//                const lmpDate = new Date(lmpInput.value);
-                const edd = calculateEDDfromLMP(lmpInput.value);
+
+                const maternityCalc: MaternityCalc = MaternityCalc.createFromLMP(new Date(lmpInput.value)); 
+                const edd = maternityCalc._edd; 
+
                 console.log("calc button clicked", edd)
                 const eddDate: Date = new Date(edd); 
-//                const eddDate = calculateEDD(lmpDate);
-                const formattedDate = formatISODate(eddDate); // eddDate.toISOString().split('T')[0];
+                const formattedDate = formatISODate(eddDate);
 
                 // Reload the page with the new query string
                 window.location.href = `${window.location.pathname}?edd=${formattedDate}`;
@@ -153,15 +159,18 @@ export class MaternityScanCalcPage implements IRouteHandler {
         });
 
 
-        // Calc button handler
+        // Update EDD button handler
         const buttonCalc = document.getElementById('calc');
         buttonCalc?.addEventListener('click', () => { 
             const selectedDate = this._fpEDD.selectedDates[0];
             if (selectedDate) {
-                const year = selectedDate.getFullYear();
-                const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-                const day = selectedDate.getDate().toString().padStart(2, '0');
-                const formattedDate = `${year}-${month}-${day}`;
+
+                // const year = selectedDate.getFullYear();
+                // const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+                // const day = selectedDate.getDate().toString().padStart(2, '0');
+                // const formattedDate = `${year}-${month}-${day}`;
+
+                const formattedDate = formatISODate(selectedDate);
                 
                 // Reload the page with the new query string
                 window.location.href = `${window.location.pathname}?edd=${formattedDate}`;
@@ -180,26 +189,14 @@ export class MaternityScanCalcPage implements IRouteHandler {
             return; 
         }
 
-        const calc: MaternityCalc = new MaternityCalc(this._edd); 
+        const maternityCalc: MaternityCalc = new MaternityCalc(this._edd); 
 
-// display-value progress
         /**
          * Progress
          */
 
-        // // Calculate the start date (LMP)
-        // const lmp = new Date(this._edd.getTime()); // Copy EDD 
-        // lmp.setDate(lmp.getDate() - 280); // 280 days before EDD
-
-        // // Calculate the difference between the LMP and today
-        // const today = new Date();
-        // const diffTime = Math.abs(today.getTime() - lmp.getTime());
-        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-
-
-        const weeks = Math.floor(calc.dayOf / 7);
-        const days = calc.dayOf % 7;
+        const weeks = Math.floor(maternityCalc.dayOf / 7);
+        const days = maternityCalc.dayOf % 7;
 
         // Format the date in a readable format
         const readableDate = this._edd.toLocaleDateString('en-NZ', {
@@ -214,18 +211,18 @@ export class MaternityScanCalcPage implements IRouteHandler {
             progress: `${weeks} weeks and ${days} days`
         }
 
-// display-value edd
+        // display-value edd
 
-this.updateDisplayValues(data);
+        this.updateDisplayValues(data);
 
-const maternityWeek = calc.weekOf; //   weeks + 1; 
+        const maternityWeek = maternityCalc.weekOf; 
 
         /**
          * Calc service week-dates
          */
 
         this.calculateAndDisplayTimelineWeekDates(
-            calc
+            maternityCalc
         ); 
 
 
@@ -274,31 +271,42 @@ const maternityWeek = calc.weekOf; //   weeks + 1;
     calculateAndDisplayTimelineWeekDates(calc: MaternityCalc) {
 
         // Calc and display week start dates 
-        const startDateElements = document.querySelectorAll('[week-startdate]');
+        const startDateElements = document.querySelectorAll<HTMLElement>('[week-startdate]');
 
         startDateElements.forEach(element => {
           const weekStr = element.getAttribute('week-startdate');
           if (weekStr) {
-            const week = parseInt(weekStr) - 1;
+            const week = parseInt(weekStr);
             if (!isNaN(week)) {
-              const calculatedDate = new Date(calc.lmpDate);
-              calculatedDate.setDate(calculatedDate.getDate() + (week * 7));
-              (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
+              const calculatedDate = calc.getWeekStartDate(week);
+              element.innerText = this.formatDateWithDifference(calculatedDate);
             }
+
+            // const week = parseInt(weekStr) - 1;
+            // if (!isNaN(week)) {
+            //   const calculatedDate = new Date(calc.lmpDate);
+            //   calculatedDate.setDate(calculatedDate.getDate() + (week * 7));
+            //   (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
+            // }
+
           }
         });
 
         // Calc and display week end dates 
-        const endDateElements = document.querySelectorAll('[week-enddate]');
+        const endDateElements = document.querySelectorAll<HTMLElement>('[week-enddate]');
 
         endDateElements.forEach(element => {
           const weekStr = element.getAttribute('week-enddate');
           if (weekStr) {
-            const week = parseInt(weekStr) - 1;
+            const week = parseInt(weekStr); // - 1;
             if (!isNaN(week)) {
-              const calculatedDate = new Date(calc.lmpDate);
-              calculatedDate.setDate(calculatedDate.getDate() + (week * 7) + 6); // Add 6 days for end of week
-              (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
+
+                const calculatedDate = calc.getWeekEndDate(week);
+                element.innerText = this.formatDateWithDifference(calculatedDate);
+  
+            //   const calculatedDate = new Date(calc.lmpDate);
+            //   calculatedDate.setDate(calculatedDate.getDate() + (week * 7) + 6); // Add 6 days for end of week
+            //   element.innerText = this.formatDateWithDifference(calculatedDate);
             }
           }
         });
@@ -306,8 +314,9 @@ const maternityWeek = calc.weekOf; //   weeks + 1;
       }
 
     updateVisibilityBasedOnWeek(maternityWeek: number) {
-        const elements = document.querySelectorAll('[min-week], [max-week]');
+        const elements = document.querySelectorAll<HTMLElement>('[min-week], [max-week]');
     
+//        let displayCards = 0; 
         elements.forEach(element => {
             const minWeek = element.getAttribute('min-week');
             const maxWeek = element.getAttribute('max-week');
@@ -333,8 +342,23 @@ const maternityWeek = calc.weekOf; //   weeks + 1;
                     break;
             }
     
-            (element as HTMLElement).style.display = hide ? 'none' : '';
+            // if(!hide)
+            //     displayCards += 1;
+//            element.parentElement?.removeChild(element); //.remove();
+            element.style.display = hide ? 'none' : '';
+            if(hide)
+                element.remove(); 
         });
+
+        // Remove empty card groups
+        const cardGroups = document.querySelectorAll<HTMLElement>('[card-group]');
+        cardGroups.forEach(cardGroup => {
+            const cards = cardGroup.querySelectorAll('[card]');
+            if (cards.length === 0) {
+                cardGroup.remove();
+            }
+        });
+
     }
 
     updateDisplayValues(data: { [key: string]: any }) {

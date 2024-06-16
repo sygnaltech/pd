@@ -25,6 +25,7 @@
   "homepage": "https://github.com/sygnaltech/dev-template#readme",
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "@types/js-cookie": "^3.0.6",
     "@types/luxon": "^3.4.2",
     "@types/node-fetch": "^2.6.11",
     "esbuild": "^0.15.14",

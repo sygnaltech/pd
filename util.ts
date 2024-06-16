@@ -1,7 +1,7 @@
 import { MaternityCalc } from "./src/maternityCalc";
 
 
-
+// Formats as ISO8601 Date format YYYY-MM-DD 
 export function formatISODate(date: Date): string {
     return date.toISOString().split('T')[0];
 }
@@ -11,12 +11,12 @@ export function formatISODate(date: Date): string {
  * @param lmp Date of last menstral period (LMP)
  * @returns 
  */
-export function calculateEDDfromLMP(lmp: string): Date {
+// export function calculateEDDfromLMP(lmp: string): Date {
 
-    const maternityCalc: MaternityCalc = MaternityCalc.createFromLMP(new Date(lmp)); 
+//     const maternityCalc: MaternityCalc = MaternityCalc.createFromLMP(new Date(lmp)); 
 
-    return maternityCalc._edd; 
-}
+//     return maternityCalc._edd; 
+// }
 
 export function calculateLMPfromEDD(edd: string): Date {
 
