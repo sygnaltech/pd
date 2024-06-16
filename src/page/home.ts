@@ -3,7 +3,7 @@
  * Page | Home
  */
 
-import { IRouteHandler } from "../IRouteHandler";
+import { IRouteHandler } from "../engine/routeDispatcher";
 
 // import gsap from 'gsap'; 
  

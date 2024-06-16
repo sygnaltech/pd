@@ -3,7 +3,7 @@
  * Site
  */
 
-import { IRouteHandler } from "./IRouteHandler";
+import { IRouteHandler } from "./engine/routeDispatcher";
 import { loadCSS } from "./engine/core";
 
 // import gsap from 'gsap'; 
