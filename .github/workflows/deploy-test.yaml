@@ -1,0 +1,23 @@
+name: Deploy Test
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Merge branches
+        run: |
+          git checkout test
+          git merge dev --no-ff
+          git push origin test
