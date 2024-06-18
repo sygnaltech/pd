@@ -47,8 +47,6 @@ export class MaternityScanCalcPage implements IRouteHandler {
     _mode: PageMode = PageMode.Calc;
     _edd: Date | null = null;
 
-
-
     // _fpEDD: Instance | Instance[]; // = flatpickr("#edd", {});
     // _fpLMP: Instance | Instance[];// = flatpickr("#lmp", {});
     _fpEDD!: flatpickr.Instance; 

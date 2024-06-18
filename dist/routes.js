@@ -6833,6 +6833,18 @@
     link.href = url;
     document.head.appendChild(link);
   }
+  function loadEngineCSS(cssFileName) {
+    const currentScript = document.currentScript;
+    if (currentScript) {
+      const scriptURL = new URL(currentScript.src);
+      const origin = scriptURL.origin;
+      const path = scriptURL.pathname.substring(0, scriptURL.pathname.lastIndexOf("/"));
+      const cssURL = `${origin}${path}/css/${cssFileName}`;
+      loadCSS(cssURL);
+    } else {
+      console.error("Unable to determine the currently executing script.");
+    }
+  }
   function loadStyle(css) {
     const style = document.createElement("style");
     style.innerText = css;
@@ -7164,7 +7176,6 @@
     setup() {
     }
     exec() {
-      console.log("Home.");
     }
   };
 
@@ -7173,19 +7184,9 @@
     constructor() {
     }
     setup() {
-      const currentScript = document.currentScript;
-      if (!currentScript) {
-        console.log("Could not determine the current script.");
-        return;
-      }
-      const fullUrl = new URL(currentScript.src);
-      const pathWithoutFile = fullUrl.origin + fullUrl.pathname.substring(0, fullUrl.pathname.lastIndexOf("/") + 1);
-      console.log("Current script URL without file name:", pathWithoutFile);
-      console.log("installing site CSS");
-      loadCSS(pathWithoutFile + "css/index.css");
+      loadEngineCSS("index.css");
     }
     exec() {
-      console.log("Site.");
     }
   };
 
