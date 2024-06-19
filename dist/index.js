@@ -1,7 +1,7 @@
 "use strict";
 (() => {
   // src/version.ts
-  var VERSION = "0.1.6";
+  var VERSION = "0.1.7";
 
   // node_modules/flatpickr/dist/esm/types/options.js
   var HOOKS = [
