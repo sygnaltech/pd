@@ -4,7 +4,7 @@
  */
 
 import { IRouteHandler } from "./engine/routeDispatcher";
-import { loadCSS, loadEngineCSS } from "./engine/core";
+import { loadEngineCSS } from "./engine/core";
 
 // import gsap from 'gsap'; 
  
@@ -16,7 +16,7 @@ export class Site implements IRouteHandler {
 
   setup() {
 
-    loadEngineCSS("index.css"); 
+    loadEngineCSS("site.css"); 
    
   }
 

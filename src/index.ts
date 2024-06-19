@@ -16,8 +16,8 @@ import { routeDispatcher } from "./routes";
 interface SiteDataType {
     // Define properties and their types for SiteDataType
     // For example:
-    someProperty?: string;
-    anotherProperty?: number;
+    // someProperty?: string;
+    // anotherProperty?: number;
     // Add other properties as needed
 }
 
