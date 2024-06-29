@@ -4,7 +4,7 @@
  * 
  */
 
-import { Debug } from "../engine/debug";
+import { Debug } from "@sygnal/sse";
 
 
 

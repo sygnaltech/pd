@@ -3,7 +3,7 @@
  * Page | TEST | wfu-if
  */
 
-import { IRouteHandler } from "../IRouteHandler";
+import { IRouteHandler } from "@sygnal/sse";
 import { SA5Logic } from "../sa5/logic";
 
 // import gsap from 'gsap'; 

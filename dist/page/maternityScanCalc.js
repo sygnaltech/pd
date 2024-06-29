@@ -1,8 +1,5 @@
 "use strict";
 (() => {
-  // src/version.ts
-  var VERSION = "0.1.8";
-
   // node_modules/flatpickr/dist/esm/types/options.js
   var HOOKS = [
     "onChange",
@@ -7129,56 +7126,6 @@
   }
   var api = init(defaultConverter, { path: "/" });
 
-  // node_modules/@sygnal/sse/dist/routeDispatcher.js
-  var RouteDispatcher = class {
-    constructor(SiteClass) {
-      this._SiteClass = SiteClass;
-    }
-    matchRoute(path) {
-      for (const route in this.routes) {
-        if (route.endsWith("*")) {
-          const baseRoute = route.slice(0, -1);
-          if (path.startsWith(baseRoute)) {
-            return this.routes[route];
-          }
-        } else if (route === path) {
-          return this.routes[route];
-        }
-      }
-      return null;
-    }
-    setupRoute() {
-      const site = new this._SiteClass();
-      site.setup();
-      const path = window.location.pathname;
-      const HandlerClass = this.matchRoute(path);
-      if (HandlerClass) {
-        const handlerInstance = new HandlerClass();
-        handlerInstance.setup();
-      } else {
-      }
-    }
-    execRoute() {
-      const site = new this._SiteClass();
-      site.exec();
-      const path = window.location.pathname;
-      const HandlerClass = this.matchRoute(path);
-      if (HandlerClass) {
-        const handlerInstance = new HandlerClass();
-        handlerInstance.exec();
-      } else {
-      }
-    }
-  };
-
-  // node_modules/@sygnal/sse/dist/index.js
-  function initSSE() {
-    if (!window.SSE) {
-      window.SSE = {};
-    }
-    window.SSE.baseUrl = Page.getCurrentScriptBaseUrl();
-  }
-
   // src/sa5/logic.ts
   var SA5Logic = class {
     constructor() {
@@ -7452,67 +7399,6 @@
       });
     }
   };
-
-  // src/page/home.ts
-  var HomePage = class {
-    constructor() {
-    }
-    setup() {
-    }
-    exec() {
-    }
-  };
-
-  // src/page/test-wfu-if.ts
-  var TestWfuIfPage = class {
-    constructor() {
-    }
-    setup() {
-    }
-    exec() {
-      console.log("Test Wfu If.");
-      new SA5Logic().init();
-    }
-  };
-
-  // src/site.ts
-  var Site = class {
-    constructor() {
-    }
-    setup() {
-      Page.loadEngineCSS("site.css");
-    }
-    exec() {
-    }
-  };
-
-  // src/routes.ts
-  var routeDispatcher = () => {
-    var routeDispatcher2 = new RouteDispatcher(Site);
-    routeDispatcher2.routes = {
-      "/": HomePage,
-      "/scan": MaternityScanCalcPage,
-      "/test/wfu-if": TestWfuIfPage
-    };
-    return routeDispatcher2;
-  };
-
-  // src/index.ts
-  var SITE_NAME = "Site";
-  initSSE();
-  var setup = () => {
-    console.log(`${SITE_NAME} package init v${VERSION}`);
-    routeDispatcher().setupRoute();
-  };
-  var exec = () => {
-    routeDispatcher().execRoute();
-  };
-  setup();
-  if (document.readyState !== "loading") {
-    exec();
-  } else {
-    document.addEventListener("DOMContentLoaded", exec);
-  }
 })();
 /*! js-cookie v3.0.5 | MIT */
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=maternityScanCalc.js.map

@@ -27,8 +27,8 @@
 import flatpickr from "flatpickr";
 import { formatISODate } from "../util";
 import { Instance } from "flatpickr/dist/types/instance";
-import { IRouteHandler } from "../engine/routeDispatcher";
-import { loadCSS, loadStyle } from "../engine/core";
+import { IRouteHandler, Page } from "@sygnal/sse";
+//import { loadCSS, loadStyle } from "../engine/core";
 import { SA5Logic } from "../sa5/logic";
 import { MaternityCalc } from "../maternityCalc";
 
@@ -59,13 +59,13 @@ export class MaternityScanCalcPage implements IRouteHandler {
     
     setup() {
 
-        loadStyle(`
+        Page.loadStyle(`
             .simplybook-widget-button {
                 display: none !important;
             }
             `);
 
-        loadCSS("https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"); 
+        Page.loadCSS("https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"); 
 
     }
 

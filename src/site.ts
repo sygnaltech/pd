@@ -3,8 +3,8 @@
  * Site
  */
 
-import { IRouteHandler } from "./engine/routeDispatcher";
-import { loadEngineCSS } from "./engine/core";
+import { IRouteHandler, Page } from "@sygnal/sse";
+// import { loadEngineCSS } from "./engine/core";
 
 // import gsap from 'gsap'; 
  
@@ -16,7 +16,7 @@ export class Site implements IRouteHandler {
 
   setup() {
 
-    loadEngineCSS("site.css"); 
+    Page.loadEngineCSS("site.css"); 
    
   }
 

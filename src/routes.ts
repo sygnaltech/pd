@@ -12,13 +12,13 @@
 
 import { MaternityScanCalcPage } from "./page/maternityScanCalc"; 
 import { HomePage } from "./page/home";
-import { RouteDispatcher } from "./engine/routeDispatcher";
-import { VERSION } from "./version";
+import { RouteDispatcher } from "@sygnal/sse";
 import { TestWfuIfPage } from "./page/test-wfu-if";
+import { Site } from "./site";
 
 export const routeDispatcher = (): RouteDispatcher => {
     
-    var routeDispatcher = new RouteDispatcher();
+    var routeDispatcher = new RouteDispatcher(Site);
     routeDispatcher.routes = {
 
         // Site paes
