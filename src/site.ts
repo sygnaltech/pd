@@ -21,9 +21,9 @@ export class Site implements IRouteHandler {
     }
     
     exec() {
-        
-        Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
 
+        Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
+// <script id="timelyScript" src="//book.gettimely.com/widget/book-button-v1.5.js"></script>
         
         this.addActionToBookLinks();
                     
