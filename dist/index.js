@@ -22,7 +22,43 @@
   };
 
   // src/version.ts
-  var VERSION = "0.1.3";
+  var VERSION = "0.1.4";
+
+  // node_modules/@sygnal/sse/dist/script.js
+  var ScriptElement = class extends HTMLScriptElement {
+    constructor(src, config) {
+      super();
+      this.src = src;
+      if (config) {
+        if (config.type) {
+          this.type = config.type;
+        }
+        if (config.id) {
+          this.id = config.id;
+        }
+        if (config.async !== void 0) {
+          this.async = config.async;
+        }
+        if (config.defer !== void 0) {
+          this.defer = config.defer;
+        }
+        if (config.customAttributes) {
+          for (const [key, value] of Object.entries(config.customAttributes)) {
+            this.setAttribute(key, value);
+          }
+        }
+      }
+    }
+    appendTo(target = "body") {
+      const parent = target === "head" ? document.head : document.body;
+      parent.appendChild(this);
+    }
+    prependTo(target = "body") {
+      const parent = target === "head" ? document.head : document.body;
+      parent.prepend(this);
+    }
+  };
+  customElements.define("custom-script", ScriptElement, { extends: "script" });
 
   // node_modules/@sygnal/sse/dist/page.js
   var __awaiter = function(thisArg, _arguments, P, generator) {
@@ -53,15 +89,6 @@
     });
   };
   var Page = class {
-    static getQueryParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
-    static loadScript(url) {
-      const script = document.createElement("script");
-      script.src = url;
-      document.body.appendChild(script);
-    }
     static loadCSS(url) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
@@ -154,8 +181,8 @@
           throw new Error("Unsupported unit");
       }
     }
-    static getResponseHeader(headerName_1) {
-      return __awaiter(this, arguments, void 0, function* (headerName, url = void 0) {
+    static getResponseHeader(headerName, url = void 0) {
+      return __awaiter(this, void 0, void 0, function* () {
         const headers = yield this.getResponseHeaders(url);
         if (!headers)
           return void 0;
@@ -164,8 +191,8 @@
         return headers.get(headerName) || void 0;
       });
     }
-    static getResponseHeaders() {
-      return __awaiter(this, arguments, void 0, function* (url = void 0) {
+    static getResponseHeaders(url = void 0) {
+      return __awaiter(this, void 0, void 0, function* () {
         try {
           if (!url) {
             url = window.location.href;
@@ -179,6 +206,18 @@
         }
         return void 0;
       });
+    }
+  };
+  Page.Head = class {
+    static loadScript(src, config) {
+      const script = new ScriptElement(src, config);
+      script.appendTo("head");
+    }
+  };
+  Page.Body = class {
+    static loadScript(src, config) {
+      const script = new ScriptElement(src, config);
+      script.appendTo("body");
     }
   };
 
@@ -335,11 +374,10 @@
     constructor() {
     }
     setup() {
-      console.log("load scripts");
       Page.loadEngineCSS("site.css");
+      Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
     }
     exec() {
-      Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js");
       this.addActionToBookLinks();
     }
     addActionToBookLinks() {
