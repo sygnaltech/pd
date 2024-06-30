@@ -15,7 +15,6 @@ export class Site implements IModule {
     
     setup() {
 
-//        console.log("load scripts"); 
         Page.loadEngineCSS("site.css"); 
 
         // <script id="timelyScript" src="//book.gettimely.com/widget/book-button-v1.5.js"></script>
@@ -24,8 +23,6 @@ export class Site implements IModule {
     }
     
     exec() {
-
-//        Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
         
         this.addActionToBookLinks();
                     
