@@ -5,15 +5,26 @@
  * 
  */
 
+import { IRouteHandler, Page } from "@sygnal/sse";
 
 
-export class Site {
+export class Site implements IRouteHandler {
 
     constructor() {
     }
     
-    init() {
+    setup() {
 
+        console.log("load scripts"); 
+        Page.loadEngineCSS("site.css"); 
+
+    }
+    
+    exec() {
+        
+        Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
+
+        
         this.addActionToBookLinks();
                     
     }
