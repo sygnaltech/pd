@@ -1,4 +1,5 @@
 import { Page } from "@sygnal/sse";
+import { ScriptElement } from "@sygnal/sse/dist/script";
 
 
 
@@ -28,7 +29,14 @@ export class TimelyService {
     // console.log("adding timely script")
     // await this.loadTimelyScript(); 
 
-// Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
+    // Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
+    // Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
+
+// Page.Body.loadScript()
+
+    // const timelyScript = new ScriptElement("//book.gettimely.com/widget/book-button-v1.5.js");
+    // timelyScript.id = "timelyScript";
+    // timelyScript.appendTo('head');
 
   }
 

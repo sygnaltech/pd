@@ -8,7 +8,7 @@
 import { WindowData, Window } from "../../types/global";
 import { TimelyService } from "../services/booking/timely";
 import { addEventListeners } from "../util";
-import { IRouteHandler, Page } from "@sygnal/sse";
+import { IModule, Page } from "@sygnal/sse";
 
 
 declare global {
@@ -17,7 +17,7 @@ declare global {
     }
 }
 
-export class ServicesPage implements IRouteHandler {
+export class ServicesPage implements IModule {
 
     timely: TimelyService;
 
