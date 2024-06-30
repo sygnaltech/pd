@@ -7,10 +7,10 @@
 export class SimplyBookService {
 
   account: string;
-  defaultLocationId: string; // 247844  
-  defaultStaffId: string;
-  defaultCategoryId: string;
-  defaultServiceId: string;
+  defaultLocationId?: string; // 247844  
+  defaultStaffId?: string;
+  defaultCategoryId?: string;
+  defaultServiceId?: string;
 
   constructor(account: string) {
 
