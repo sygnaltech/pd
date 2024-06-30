@@ -1,5 +1,26 @@
 "use strict";
 (() => {
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = (value) => {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var rejected = (value) => {
+        try {
+          step(generator.throw(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
+
   // node_modules/@sygnal/sse/dist/page.js
   var __awaiter = function(thisArg, _arguments, P, generator) {
     function adopt(value) {
@@ -256,6 +277,48 @@
   }
   var api = init(defaultConverter, { path: "/" });
 
+  // node_modules/@sygnal/sse/dist/routeDispatcher.js
+  var RouteDispatcher = class {
+    constructor(SiteClass) {
+      this._SiteClass = SiteClass;
+    }
+    matchRoute(path) {
+      for (const route in this.routes) {
+        if (route.endsWith("*")) {
+          const baseRoute = route.slice(0, -1);
+          if (path.startsWith(baseRoute)) {
+            return this.routes[route];
+          }
+        } else if (route === path) {
+          return this.routes[route];
+        }
+      }
+      return null;
+    }
+    setupRoute() {
+      const site = new this._SiteClass();
+      site.setup();
+      const path = window.location.pathname;
+      const HandlerClass = this.matchRoute(path);
+      if (HandlerClass) {
+        const handlerInstance = new HandlerClass();
+        handlerInstance.setup();
+      } else {
+      }
+    }
+    execRoute() {
+      const site = new this._SiteClass();
+      site.exec();
+      const path = window.location.pathname;
+      const HandlerClass = this.matchRoute(path);
+      if (HandlerClass) {
+        const handlerInstance = new HandlerClass();
+        handlerInstance.exec();
+      } else {
+      }
+    }
+  };
+
   // src/site.ts
   var Site = class {
     constructor() {
@@ -278,6 +341,114 @@
       });
     }
   };
+
+  // src/services/booking/timely.ts
+  var TimelyService = class {
+    constructor(account) {
+      this.account = account;
+    }
+    init() {
+      return __async(this, null, function* () {
+      });
+    }
+    bookService(categoryId, serviceId) {
+      const bookingButton = new timelyButton(
+        this.account,
+        {
+          location: this.defaultLocationId,
+          staff: this.defaultStaffId,
+          category: categoryId,
+          product: serviceId,
+          dontCreateButton: true
+        }
+      );
+      bookingButton.start();
+    }
+  };
+
+  // src/util.ts
+  function addEventListeners(selector, event, handler) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach((element) => {
+      element.addEventListener(event, handler);
+    });
+  }
+
+  // src/page/services.ts
+  var ServicesPage = class {
+    constructor() {
+      this.timely = new TimelyService("ponsonbydoctors");
+    }
+    setup() {
+    }
+    exec() {
+      if (!window.data) {
+        console.error("Window.data is not available.");
+        return;
+      }
+      addEventListeners('*[timely="book"]', "click", (e) => {
+        const target = e.currentTarget;
+        this.timely.bookService(
+          target.getAttribute("categoryId"),
+          target.getAttribute("serviceId")
+        );
+      });
+      addEventListeners('*[timely="ponsonby"]', "click", (e) => {
+        const target = e.currentTarget;
+        this.timely.bookService(
+          target.getAttribute("categoryId"),
+          target.getAttribute("serviceId")
+        );
+      });
+      addEventListeners('*[timely="ponsonby-service"]', "click", (e) => {
+        const target = e.currentTarget;
+        this.timely.bookService(
+          target.getAttribute("categoryId"),
+          target.getAttribute("serviceId")
+        );
+      });
+      addEventListeners('*[timely="online"]', "click", (e) => {
+        const target = e.currentTarget;
+        this.timely.bookService(
+          target.getAttribute("categoryId"),
+          target.getAttribute("serviceId")
+        );
+      });
+      addEventListeners('*[timely="online-service"]', "click", (e) => {
+        const target = e.currentTarget;
+        this.timely.bookService(
+          target.getAttribute("categoryId"),
+          target.getAttribute("serviceId")
+        );
+      });
+      if (window.location.search.includes("action=book")) {
+        this.timely.bookService(
+          window.data.timely_categoryId,
+          window.data.timely_productId
+        );
+      }
+    }
+  };
+
+  // src/page/clinic.ts
+  var ClinicPage = class {
+    constructor() {
+    }
+    setup() {
+    }
+    exec() {
+    }
+  };
+
+  // src/routes.ts
+  var routeDispatcher = () => {
+    var routeDispatcher2 = new RouteDispatcher(Site);
+    routeDispatcher2.routes = {
+      "/services/*": ServicesPage,
+      "/clinics/*": ClinicPage
+    };
+    return routeDispatcher2;
+  };
 })();
 /*! js-cookie v3.0.5 | MIT */
-//# sourceMappingURL=site.js.map
+//# sourceMappingURL=routes.js.map

@@ -1,16 +1,21 @@
+import { Page } from "@sygnal/sse";
 
 
 
-declare function timelyButton(company: string, options: object): void;
+// declare function timelyButton(company: string, options: object): void;
+declare class timelyButton {
+  constructor(company: string, options: object);
+  start(): void;
+}
 
 
 export class TimelyService {
 
   account: string;
-  defaultLocationId: string; // 247844  
-  defaultStaffId: string;
-  defaultCategoryId: string;
-  defaultServiceId: string;
+  defaultLocationId?: string; // 247844  
+  defaultStaffId?: string;
+  defaultCategoryId?: string;
+  defaultServiceId?: string;
 
   constructor(account: string) {
 
@@ -22,6 +27,8 @@ export class TimelyService {
 
     // console.log("adding timely script")
     // await this.loadTimelyScript(); 
+
+// Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
 
   }
 
@@ -40,22 +47,22 @@ export class TimelyService {
     bookingButton.start();
   }
 
-  static loadTimelyScript(): Promise<void> {
+//   static loadTimelyScript(): Promise<void> {
 
-    // Check to see if it exists? install only if needed? 
+//     // Check to see if it exists? install only if needed? 
 
 
 
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-//      script.src = "//book.gettimely.com/widget/book-button-v1.3.js";
-      script.src = "//book.gettimely.com/widget/book-button-v1.5.js";  
-      script.id = 'timelyScript';
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error(`Failed to load script: ${script.src}`));
-      document.head.appendChild(script);
-    });
-  }
+//     return new Promise((resolve, reject) => {
+//       const script = document.createElement('script');
+// //      script.src = "//book.gettimely.com/widget/book-button-v1.3.js";
+//       script.src = "//book.gettimely.com/widget/book-button-v1.5.js";  
+//       script.id = 'timelyScript';
+//       script.onload = () => resolve();
+//       script.onerror = () => reject(new Error(`Failed to load script: ${script.src}`));
+//       document.head.appendChild(script);
+//     });
+//   }
   
 }
 

@@ -8,6 +8,7 @@
 import { WindowData, Window } from "../../types/global";
 import { TimelyService } from "../services/booking/timely";
 import { addEventListeners } from "../util";
+import { IRouteHandler, Page } from "@sygnal/sse";
 
 
 declare global {
@@ -16,7 +17,7 @@ declare global {
     }
 }
 
-export class ServicesPage {
+export class ServicesPage implements IRouteHandler {
 
     timely: TimelyService;
 
@@ -25,8 +26,11 @@ export class ServicesPage {
         this.timely = new TimelyService("ponsonbydoctors"); 
 
     }
+
+    setup() {
+    }
     
-    init() {
+    exec() {
 
         // Timely script already loaded at Site level
 

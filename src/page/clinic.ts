@@ -10,16 +10,21 @@
 // // import QRCode from 'qrcode';
 // import { AdjustTrackingUrl } from "../adjust";
 // import { AdjustTrackingQr } from "../adjust-qr";
+import { IRouteHandler, Page } from "@sygnal/sse";
 
 //const url: string = 'https://www.sygnal.com?thisisatrackingurlthsfdsfsdsdatdoesstuff';
 
 
-export class ClinicPage {
+export class ClinicPage implements IRouteHandler {
 
     constructor() {
     }
+
+    setup() {
+        
+    }
     
-    init() {
+    exec() {
 
         /**
          * Fix links for the ToC 
