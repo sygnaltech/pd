@@ -22,7 +22,7 @@
   };
 
   // src/version.ts
-  var VERSION = "0.1.4";
+  var VERSION = "0.1.5";
 
   // node_modules/@sygnal/sse/dist/script.js
   var ScriptElement = class extends HTMLScriptElement {
@@ -375,7 +375,6 @@
     }
     setup() {
       Page.loadEngineCSS("site.css");
-      Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
     }
     exec() {
       this.addActionToBookLinks();

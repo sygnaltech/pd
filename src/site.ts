@@ -15,17 +15,14 @@ export class Site implements IModule {
     
     setup() {
 
-//        console.log("load scripts"); 
         Page.loadEngineCSS("site.css"); 
 
         // <script id="timelyScript" src="//book.gettimely.com/widget/book-button-v1.5.js"></script>
-        Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
+//        Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
 
     }
     
     exec() {
-
-//        Page.loadScript("//book.gettimely.com/widget/book-button-v1.5.js"); 
         
         this.addActionToBookLinks();
                     
