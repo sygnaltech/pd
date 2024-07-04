@@ -22,7 +22,7 @@
   };
 
   // src/version.ts
-  var VERSION = "0.1.4";
+  var VERSION = "0.1.5";
 
   // node_modules/@sygnal/sse/dist/script.js
   var ScriptElement = class extends HTMLScriptElement {
