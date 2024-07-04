@@ -18,7 +18,7 @@ export class Site implements IModule {
         Page.loadEngineCSS("site.css"); 
 
         // <script id="timelyScript" src="//book.gettimely.com/widget/book-button-v1.5.js"></script>
-        Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
+//        Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
 
     }
     
