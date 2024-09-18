@@ -4374,6 +4374,11 @@
     }
     exec() {
       this.addActionToBookLinks();
+      document.querySelectorAll('[event="service-booking-intent"]').forEach((element) => {
+        element.addEventListener("click", () => {
+          as.capture("service-booking-intent");
+        });
+      });
     }
     addActionToBookLinks() {
       const bookElements = document.querySelectorAll("[pd-book]");
