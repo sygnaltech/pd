@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/page/clinic.ts"],
-  "sourcesContent": ["\r\n/*\r\n * SITE \r\n * Page | Clinic \r\n * \r\n */\r\n\r\nimport { IModule, Page } from \"@sygnal/sse\";\r\n\r\n\r\n\r\nexport class ClinicPage implements IModule {\r\n\r\n    constructor() {\r\n    }\r\n\r\n    setup() {\r\n        \r\n    }\r\n    \r\n    exec() {\r\n                    \r\n    }\r\n\r\n}  \r\n\r\n    \r\n    \r\n    \r\n    "],
+  "sourcesContent": ["\n/*\n * SITE \n * Page | Clinic \n * \n */\n\nimport { IModule, Page } from \"@sygnal/sse\";\n\n\n\nexport class ClinicPage implements IModule {\n\n    constructor() {\n    }\n\n    setup() {\n        \n    }\n    \n    exec() {\n                    \n    }\n\n}  \n\n    \n    \n    \n    "],
   "mappings": ";;;AAWO,MAAM,aAAN,MAAoC;AAAA,IAEvC,cAAc;AAAA,IACd;AAAA,IAEA,QAAQ;AAAA,IAER;AAAA,IAEA,OAAO;AAAA,IAEP;AAAA,EAEJ;",
   "names": []
 }

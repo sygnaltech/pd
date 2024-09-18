@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@sygnal/sse": "^0.2.0",
-    "glob": "^10.4.2"
+    "glob": "^10.4.2",
+    "posthog-js": "^1.161.5"
   }
 }
