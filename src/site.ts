@@ -48,6 +48,20 @@ posthog.init('phc_JKFo007B6JTauXJOxj22d9saMp20BYQyjz6IhFJFVht',
 
         this.addActionToBookLinks();
                     
+
+        // Posthog event - service booking intent
+        // when a booking button is clicked
+        // does not track widget interactions 
+        // [event=service-booking]
+        document.querySelectorAll<HTMLElement>('[event="service-booking-intent"]').forEach(element => {
+            // Add click event listener to each element
+            element.addEventListener('click', () => {
+                posthog.capture("service-booking-intent");
+            });
+        });
+
+
+
     }
 
     // Function to add ?action=book to elements with the [pd-book] attribute
