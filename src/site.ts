@@ -6,7 +6,7 @@
  */
 
 import { IModule, Page } from "@sygnal/sse";
-
+import posthog from 'posthog-js'
 
 export class Site implements IModule {
 
@@ -20,10 +20,32 @@ export class Site implements IModule {
         // <script id="timelyScript" src="//book.gettimely.com/widget/book-button-v1.5.js"></script>
 //        Page.Head.loadScript("//book.gettimely.com/widget/book-button-v1.5.js", { id: "timelyScript" });
 
+posthog.init('phc_JKFo007B6JTauXJOxj22d9saMp20BYQyjz6IhFJFVht',
+    {
+        api_host: 'https://us.i.posthog.com',
+        person_profiles: 'identified_only' // or 'always' to create profiles for anonymous users as well
+    }
+)
+
     }
     
     exec() {
         
+
+        // // Ensure flags are loaded before usage.
+        // // You'll only need to call this on the code for when the first time a user visits.
+        // posthog.onFeatureFlags(function() {
+        //     // feature flags should be available at this point
+        //     if (posthog.isFeatureEnabled('my-flag') ) {
+        //         // do something
+        //     }
+        // })
+
+        // // Otherwise, you can just do:
+        // if (posthog.isFeatureEnabled('my-flag') ) {
+        //     // do something
+        // }
+
         this.addActionToBookLinks();
                     
     }

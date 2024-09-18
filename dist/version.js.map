@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/version.ts"],
-  "sourcesContent": ["export const VERSION = \"0.1.5\"; "],
+  "sourcesContent": ["export const VERSION = \"0.1.6\"; "],
   "mappings": ";;;AAAO,MAAM,UAAU;",
   "names": []
 }
