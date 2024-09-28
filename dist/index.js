@@ -1,7 +1,7 @@
 "use strict";
 (() => {
   // src/version.ts
-  var VERSION = "0.1.11";
+  var VERSION = "0.1.12";
 
   // node_modules/flatpickr/dist/esm/types/options.js
   var HOOKS = [
@@ -11638,6 +11638,9 @@
       document.querySelectorAll('a[href$=".mp4"]').forEach((link) => {
         link.addEventListener("click", (event) => {
           event.preventDefault();
+          fs.capture("media-popup", {
+            media: "3d4d"
+          });
           const videoUrl = link.href;
           videoElement.src = videoUrl;
           videoPopup.style.display = "flex";

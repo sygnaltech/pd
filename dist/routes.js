@@ -11627,6 +11627,9 @@
       document.querySelectorAll('a[href$=".mp4"]').forEach((link) => {
         link.addEventListener("click", (event) => {
           event.preventDefault();
+          fs.capture("media-popup", {
+            media: "3d4d"
+          });
           const videoUrl = link.href;
           videoElement.src = videoUrl;
           videoPopup.style.display = "flex";
