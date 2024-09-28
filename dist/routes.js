@@ -11594,6 +11594,82 @@
       fs.init("phc_XNXwsF5o7snDKAZVngbWLupKigbqv16MBNOC8UoWKE", { api_host: "https://us.i.posthog.com", person_profiles: "identified_only" });
     }
     exec() {
+      this.monitorPosthogClickEvents();
+    }
+    monitorPosthogClickEvents() {
+      const elements = document.querySelectorAll("[ph-event]");
+      elements.forEach((element) => {
+        const eventName = element.getAttribute("ph-event");
+        if (eventName) {
+          element.addEventListener("click", () => {
+            fs.capture(eventName, {});
+            console.log(`PostHog event '${eventName}' fired!`);
+          });
+        }
+      });
+    }
+  };
+
+  // src/page/services.ts
+  var ServicesPage = class {
+    constructor() {
+    }
+    setup() {
+      Page.loadEngineCSS("services.css");
+    }
+    exec() {
+      console.log("services page");
+      this.installVideoPopup();
+    }
+    installVideoPopup() {
+      console.log("install video");
+      const { videoPopup, videoElement, closeButton } = this.createVideoPopupElements();
+      document.querySelectorAll('a[href$=".mp4"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          const videoUrl = link.href;
+          videoElement.src = videoUrl;
+          videoPopup.style.display = "flex";
+          videoElement.play();
+        });
+      });
+      closeButton.addEventListener("click", () => {
+        videoPopup.style.display = "none";
+        videoElement.pause();
+        videoElement.src = "";
+      });
+      videoPopup.addEventListener("click", (event) => {
+        if (event.target === videoPopup) {
+          videoPopup.style.display = "none";
+          videoElement.pause();
+          videoElement.src = "";
+        }
+      });
+    }
+    createVideoPopupElements() {
+      console.log("creating elements");
+      const videoPopup = document.createElement("div");
+      videoPopup.id = "videoPopup";
+      videoPopup.className = "popup-overlay";
+      const popupContent = document.createElement("div");
+      popupContent.className = "popup-content";
+      const closeButton = document.createElement("span");
+      closeButton.id = "closePopup";
+      closeButton.className = "close-button";
+      closeButton.innerHTML = "&times;";
+      const videoElement = document.createElement("video");
+      videoElement.id = "popupVideo";
+      videoElement.style.width = "100%";
+      videoElement.controls = true;
+      popupContent.appendChild(closeButton);
+      popupContent.appendChild(videoElement);
+      videoPopup.appendChild(popupContent);
+      document.body.appendChild(videoPopup);
+      return {
+        videoPopup,
+        videoElement,
+        closeButton
+      };
     }
   };
 
@@ -11603,6 +11679,7 @@
     routeDispatcher2.routes = {
       "/": HomePage,
       "/scan": MaternityScanCalcPage,
+      "/services/*": ServicesPage,
       "/test/wfu-if": TestWfuIfPage
     };
     return routeDispatcher2;

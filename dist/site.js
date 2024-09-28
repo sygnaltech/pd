@@ -4386,6 +4386,19 @@
       fs.init("phc_XNXwsF5o7snDKAZVngbWLupKigbqv16MBNOC8UoWKE", { api_host: "https://us.i.posthog.com", person_profiles: "identified_only" });
     }
     exec() {
+      this.monitorPosthogClickEvents();
+    }
+    monitorPosthogClickEvents() {
+      const elements = document.querySelectorAll("[ph-event]");
+      elements.forEach((element) => {
+        const eventName = element.getAttribute("ph-event");
+        if (eventName) {
+          element.addEventListener("click", () => {
+            fs.capture(eventName, {});
+            console.log(`PostHog event '${eventName}' fired!`);
+          });
+        }
+      });
     }
   };
 })();

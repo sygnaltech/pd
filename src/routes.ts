@@ -15,6 +15,7 @@ import { HomePage } from "./page/home";
 import { RouteDispatcher } from "@sygnal/sse";
 import { TestWfuIfPage } from "./page/test-wfu-if";
 import { Site } from "./site";
+import { ServicesPage } from "./page/services";
 
 export const routeDispatcher = (): RouteDispatcher => {
     
@@ -24,6 +25,7 @@ export const routeDispatcher = (): RouteDispatcher => {
         // Site paes
         '/': HomePage,
         '/scan': MaternityScanCalcPage,
+        '/services/*': ServicesPage,
 
         // TEST Pages
         '/test/wfu-if': TestWfuIfPage, 

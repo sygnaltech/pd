@@ -25,7 +25,29 @@ export class Site implements IRouteHandler {
 
   exec() {
 
+    this.monitorPosthogClickEvents(); 
+
   }
+
+  monitorPosthogClickEvents() {
+
+      // Find all elements with the 'ph-event' custom attribute
+      const elements = document.querySelectorAll('[ph-event]');
+
+      // Iterate through the elements and install a click event handler
+      elements.forEach((element) => {
+          const eventName = element.getAttribute('ph-event'); // Get the event name from the attribute
+          if (eventName) {
+              element.addEventListener('click', () => {
+                  // Fire a PostHog event when the element is clicked
+                  posthog.capture(eventName, {});
+                  console.log(`PostHog event '${eventName}' fired!`);
+              });
+          }
+      });
+
+  }
+
 
 }
 
