@@ -120,6 +120,16 @@ export class Book2Page implements IRouteHandler {
     if (waitlistSection) {
       (waitlistSection as HTMLElement).style.display = isWaitlist ? '' : 'none';
     }
+
+    const referralSection = document.querySelector('[book-step="referral"]');
+    if (referralSection) {
+      (referralSection as HTMLElement).style.display = isWaitlist ? '' : 'none';
+    }
+
+    const prepareSection = document.querySelector('[book-step="prepare"]');
+    if (prepareSection) {
+      (prepareSection as HTMLElement).style.display = isWaitlist ? '' : 'none';
+    }
   }
 
   private setupAccordion() {
