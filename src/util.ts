@@ -1,9 +1,15 @@
 import { MaternityCalc } from "./maternityCalc";
 
 
-// Formats as ISO8601 Date format YYYY-MM-DD 
+// Formats as ISO8601 Date format YYYY-MM-DD, using the date's LOCAL calendar
+// components. Do NOT use toISOString() here: the date picker returns a Date at
+// local midnight, and toISOString() converts to UTC, which shifts the calendar
+// day backwards for NZ's positive offset (e.g. picking 15 Apr yields 14 Apr).
 export function formatISODate(date: Date): string {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 /**

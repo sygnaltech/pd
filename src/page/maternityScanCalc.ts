@@ -272,21 +272,11 @@ export class MaternityScanCalcPage implements IRouteHandler {
         const startDateElements = document.querySelectorAll<HTMLElement>('[week-startdate]');
 
         startDateElements.forEach(element => {
-          const weekStr = element.getAttribute('week-startdate');
-          if (weekStr) {
-            const week = parseInt(weekStr);
-            if (!isNaN(week)) {
-              const calculatedDate = calc.getWeekStartDate(week);
-              element.innerText = this.formatDateWithDifference(calculatedDate);
-            }
-
-            // const week = parseInt(weekStr) - 1;
-            // if (!isNaN(week)) {
-            //   const calculatedDate = new Date(calc.lmpDate);
-            //   calculatedDate.setDate(calculatedDate.getDate() + (week * 7));
-            //   (element as HTMLElement).innerText = this.formatDateWithDifference(calculatedDate);
-            // }
-
+          // Attribute is a gestational-age token, "W" or "W.D" (e.g. "12.5" = 12w5d).
+          const token = element.getAttribute('week-startdate');
+          const calculatedDate = token ? calc.getScanWindowStartDate(token) : null;
+          if (calculatedDate) {
+            element.innerText = this.formatDateWithDifference(calculatedDate);
           }
         });
 
@@ -294,18 +284,11 @@ export class MaternityScanCalcPage implements IRouteHandler {
         const endDateElements = document.querySelectorAll<HTMLElement>('[week-enddate]');
 
         endDateElements.forEach(element => {
-          const weekStr = element.getAttribute('week-enddate');
-          if (weekStr) {
-            const week = parseInt(weekStr); // - 1;
-            if (!isNaN(week)) {
-
-                const calculatedDate = calc.getWeekEndDate(week);
-                element.innerText = this.formatDateWithDifference(calculatedDate);
-  
-            //   const calculatedDate = new Date(calc.lmpDate);
-            //   calculatedDate.setDate(calculatedDate.getDate() + (week * 7) + 6); // Add 6 days for end of week
-            //   element.innerText = this.formatDateWithDifference(calculatedDate);
-            }
+          // Attribute is a gestational-age token, "W" or "W.D" (e.g. "13.5" = 13w5d).
+          const token = element.getAttribute('week-enddate');
+          const calculatedDate = token ? calc.getScanWindowEndDate(token) : null;
+          if (calculatedDate) {
+            element.innerText = this.formatDateWithDifference(calculatedDate);
           }
         });
 

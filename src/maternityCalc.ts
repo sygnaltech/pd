@@ -109,6 +109,74 @@ export class MaternityCalc {
     }
 
     /**
+     * Parses a gestational-age token of the form "W" or "W.D", where
+     * W = completed gestational weeks and D = additional days (0-6),
+     * measured from the LMP (gestational age 0w0d = the LMP date).
+     *
+     * The scan-planner markup encodes each window this way, e.g. the nuchal
+     * window is authored as "12.5" (12 weeks 5 days) to "13.5" (13 weeks 5 days).
+     *
+     * @returns null for empty/invalid tokens (the caller should skip these).
+     */
+    static parseGestationToken(token: string | number): { weeks: number; days: number; hasDays: boolean } | null {
+      if (token === null || token === undefined) return null;
+      const trimmed = String(token).trim();
+      if (trimmed === '') return null;
+
+      const parts = trimmed.split('.');
+      const weeks = parseInt(parts[0], 10);
+      if (isNaN(weeks)) return null;
+
+      const hasDays = parts.length > 1 && parts[1] !== '';
+      const days = hasDays ? parseInt(parts[1], 10) : 0;
+      if (isNaN(days)) return null;
+
+      return { weeks, days, hasDays };
+    }
+
+    /**
+     * Returns the calendar date at a given gestational age, measured from the
+     * LMP where LMP = 0w0d. This is the standard obstetric convention and is
+     * what the scan-window dates are built on.
+     *
+     * @param weeks completed gestational weeks
+     * @param days  additional days (default 0)
+     */
+    getGestationDate(weeks: number, days: number = 0): Date {
+      const lmpDate = DateTime.fromJSDate(this.lmpDate).startOf('day');
+      const dayDate = lmpDate.plus({ days: weeks * 7 + days });
+      return MaternityCalc.convertToJSDate(dayDate);
+    }
+
+    /**
+     * Start date of a scan window, from a gestational-age token ("W" or "W.D").
+     * e.g. "12.5" -> 12w5d, "6" -> 6w0d.
+     *
+     * @returns null if the token is empty/invalid.
+     */
+    getScanWindowStartDate(token: string | number): Date | null {
+      const g = MaternityCalc.parseGestationToken(token);
+      if (!g) return null;
+      return this.getGestationDate(g.weeks, g.days);
+    }
+
+    /**
+     * End date of a scan window, from a gestational-age token ("W" or "W.D").
+     *
+     * A whole-week token (e.g. "24") is an inclusive range end and resolves to
+     * the last day of that gestational week (24w6d). A token carrying explicit
+     * days (e.g. "13.5") is an exact milestone and is used as-is (13w5d).
+     *
+     * @returns null if the token is empty/invalid.
+     */
+    getScanWindowEndDate(token: string | number): Date | null {
+      const g = MaternityCalc.parseGestationToken(token);
+      if (!g) return null;
+      const extraDays = g.hasDays ? 0 : 6;
+      return this.getGestationDate(g.weeks, g.days + extraDays);
+    }
+
+    /**
      * Estimates the due date using +280 rule 
      * @param lmp Date of last menstral period (LMP)
      * @returns MaternityCalc instance
