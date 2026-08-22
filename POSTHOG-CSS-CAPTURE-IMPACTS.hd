@@ -1,0 +1,122 @@
+---
+id: ZsDeN40XwkSDVjdipDWU7w
+version: 2
+title: PostHog CSS Capture Impacts
+date: 2026-08-22
+author: Michael Wells
+description: PostHog autocapture uses computed CSS cursor as a heuristic for clickability, coupling analytics coverage to presentation styling.
+tags:
+  - posthog
+  - analytics
+  - autocapture
+purpose: Record the finding for later investigation before acting on it.
+---
+
+# PostHog CSS Capture Impacts
+
+> [!IMPORTANT]
+> PostHog autocapture reads **computed CSS** to decide whether a click is worth
+> capturing. A `div` gets tracked or ignored based on its `cursor` property.
+> Changing a style rule in the Webflow Designer can silently turn analytics off.
+
+## The finding
+
+`posthog-js` autocapture captures clicks on a fixed set of tags:
+
+```
+a, button, form, input, select, textarea, label
+```
+
+For **any other tag** — a `div`, `span`, `li` — it falls back to a heuristic:
+it calls `getComputedStyle()` and checks whether `cursor` resolves to `pointer`.
+If yes, it treats the element as interactive and captures the click. If no, the
+click is dropped.
+
+That is the whole mechanism. There is no magic — `window.getComputedStyle()` is
+an ordinary DOM API available to any script on the page. What is surprising is
+not *how* it reads the CSS, but *that analytics coverage is a function of
+presentation styling at all*.
+
+## Verified behaviour
+
+Tested against the exact build in production on Ponsonby Doctors
+(`posthog-js` 1.161.5, loaded from the site bundle), using a probe page that
+intercepts `capture()` so nothing is sent.
+
+Six `div` elements, identical except for cursor styling and position:
+
+| Element's own computed `cursor` | Ancestor `cursor` | Captured? |
+|---|---|---|
+| `pointer` | `default` | Yes |
+| `default` | `pointer` | Yes |
+| `pointer` (inherited) | `pointer` | Yes |
+| `default` | `default` | No |
+| `default` | `auto` | No |
+| `pointer` | `auto` (body) | Yes |
+
+**Rule:** a click is captured if the clicked element **or any ancestor** has a
+computed `cursor` of `pointer`.
+
+Two consequences fall out of that:
+
+- `cursor` is an **inherited** CSS property, so setting `pointer` on a wrapper
+  makes every descendant capturable by default.
+- Explicitly overriding a child back to `cursor: default` does **not** exclude
+  it — the ancestor is checked independently and still qualifies.
+
+## Why this matters here
+
+The Ponsonby Doctors nav autocomplete toggle is a `div`
+(`.dropdown-toggle-2.w-dropdown-toggle`). Webflow styles it `cursor: pointer`,
+so its clicks are captured today. That is the only reason "user opened the
+search dropdown" is trackable without code.
+
+Nobody chose that. It is a side effect of a Webflow style default.
+
+## Risks
+
+- **Silent breakage.** A designer changes a hover style, sets
+  `cursor: default`, and an event stream stops. No error, no console warning,
+  no build failure. It surfaces weeks later as a gap in a chart.
+- **Silent over-capture.** Any decorative wrapper styled `cursor: pointer`
+  makes its entire subtree capturable. On a site with generous pointer styling
+  this inflates autocapture volume, which is billed per event.
+- **Untestable from the code.** Nothing in the HTML or the JS says "this is
+  tracked". The answer lives in a compiled stylesheet.
+- **Cross-team invisibility.** The person who can break tracking (a designer in
+  Webflow) has no way to know they are touching analytics.
+
+## Open questions
+
+- Exact traversal order in the minified source. Reading the bundle suggested
+  only ancestors are checked; the empirical results show the element's own
+  cursor also qualifies. The behaviour table above is authoritative — the code
+  reading is not yet reconciled. Worth checking against the unminified
+  `posthog-js` source.
+- Does the same heuristic apply to **heatmaps** and **dead-click capture**, or
+  only to interaction autocapture? Both are enabled on this project.
+- Is there a supported way to mark an element as interactive **explicitly**,
+  independent of styling? `css_selector_allowlist` exists but is a narrowing
+  AND-gate — setting it restricts autocapture site-wide rather than adding to
+  it, so it is not a fit.
+- What is the cost exposure? Worth counting how many `cursor: pointer`
+  elements exist across the site.
+
+## Mitigation to consider
+
+Do not rely on the heuristic for anything that matters. For events that must be
+reliable, either put them on a real `<a>` or `<button>`, or capture them
+explicitly in code. Treat cursor-derived capture as a convenience that may
+disappear without notice.
+
+## Reproduction
+
+Probe page used for the tests:
+
+```
+scratchpad/phtest.html
+```
+
+It loads `posthog-js@1.161.5`, points `api_host` at a dead address, and
+monkey-patches `posthog.capture` to record calls instead of sending them. Safe
+to re-run; sends nothing.
