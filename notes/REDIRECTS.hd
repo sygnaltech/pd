@@ -1,0 +1,30 @@
+---
+title: Redirects
+description: 301 redirects to apply in Webflow Site Settings → Publishing → 301 Redirects.
+id: 0Of6A4ol9GnJof0PeEkbSF
+version: 1
+---
+
+<h1>Redirects</h1>
+<p>These 301 redirects must be configured manually in <strong>Webflow → Site Settings → Publishing → 301 Redirects</strong>. The Webflow API/MCP cannot create redirects. A Webflow redirect only fires for a path that no longer resolves to a live page, so each source page below has already been unpublished.</p>
+<h2>Active redirects</h2>
+<table>
+<thead>
+<tr><th>Source (old path)</th><th>Target (new path)</th><th>Reason</th><th>Date added</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/services/whooping-cough</code></td>
+<td><code>/services/flu-vaccination</code></td>
+<td>The "Whooping Cough Immunization &amp; PCR Tests" service was retired. Whooping cough immunisation is now a subsection of the Flu Vaccination page; PCR testing has been discontinued.</td>
+<td>2026-07-13</td>
+</tr>
+</tbody>
+</table>
+<h2>Locale variants</h2>
+<p>Secondary locales publish under subdirectories (<code>/zh</code>, <code>/ko</code>). If the retired page was indexed in those locales, add matching redirects:</p>
+<ul>
+<li><code>/zh/services/whooping-cough</code> &rarr; <code>/zh/services/flu-vaccination</code></li>
+<li><code>/ko/services/whooping-cough</code> &rarr; <code>/ko/services/flu-vaccination</code></li>
+</ul>
+<p><em>Confirm the exact live path in Webflow before saving &mdash; service pages resolve under the Services collection's URL prefix (<code>/services/&lt;slug&gt;</code>).</em></p>

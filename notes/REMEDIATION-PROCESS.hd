@@ -1,0 +1,140 @@
+---
+title: Service Remediation Process
+description: How published Services CMS items are brought into compliance with the site-bound rules, brand voice, and skills — one item at a time, with per-change approval.
+id: 2in7r4jHOacThyVIDdhT1c
+version: 1
+date: 2026-07-13
+author: Claude
+---
+
+<h1>Service Remediation Process</h1>
+
+<p>This is the standard operating procedure for remediating existing published <strong>Services</strong> items against the governance now stored on the Webflow site (see <code>rules/brand-voice.md</code>, <code>rules/house-style.md</code>, <code>rules/medical-compliance.md</code>, <code>rules/cms-fields.md</code>, and the <code>write-service-page</code> / <code>localize-collection</code> skills). It is deliberately <strong>one item at a time</strong> with <strong>per-change approval</strong> — nothing is written to the CMS or published without the PM signing off each change individually.</p>
+
+<section>
+<h2>Principles</h2>
+<ul>
+<li><strong>Source of truth is Webflow.</strong> The rules and skills are refetched from the MCP at the start of every item so remediation always reflects the current published governance, not a cached copy.</li>
+<li><strong>Spot changes by default.</strong> Remediation is primarily targeted fixes to specific spans of text. Wholesale rewrites or restructures are <em>not</em> applied as spot changes — they are raised as a separate written recommendation for a deliberate decision.</li>
+<li><strong>EN source only.</strong> Remediation edits the primary English locale. Any knock-on translation work (zh/ko) is a separate task governed by <code>localize-collection/SKILL.md</code> and is noted, not performed, here.</li>
+<li><strong>Nothing published unilaterally.</strong> Approved changes are written to the CMS item as a draft; the PM reviews in Webflow and publishes.</li>
+<li><strong>Verbatim statements are untouchable.</strong> Manufacturer / Medsafe regulatory wording in <code>disclaimer</code> and <code>mandatory-statement</code> is quoted verbatim and is never "corrected" (e.g. to NZ spelling).</li>
+</ul>
+</section>
+
+<section>
+<h2>Inputs and outputs</h2>
+<table>
+<thead>
+<tr><th>Artifact</th><th>Role</th></tr>
+</thead>
+<tbody>
+<tr><td><code>REMEDIATE.hd</code></td><td>The tracker: ordered list of published Services items, with a <strong>Remediated</strong> date column filled in as each is completed.</td></tr>
+<tr><td><code>&lt;slug&gt;.hd</code></td><td>One remediation document per item (filename = the item's slug). Produced by this process; it is the approval artifact.</td></tr>
+<tr><td>Webflow rules + skills</td><td>Refetched per item via the MCP <code>data_agent_instructions_tool</code>.</td></tr>
+<tr><td>Webflow Services item</td><td>Refetched per item via the MCP <code>data_cms_tool</code> (EN locale, filtered by slug).</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Procedure</h2>
+<ol>
+<li><strong>Select the next item.</strong> Take the topmost row in <code>REMEDIATE.hd</code> whose <strong>Remediated</strong> column is blank.</li>
+<li><strong>Refresh governance.</strong> Fetch the current rules and skills from Webflow (<code>search_instructions</code> then <code>read_instruction</code> for each of the four rules and, when relevant, the <code>write-service-page</code> skill). Confirm the versions used.</li>
+<li><strong>Retrieve the item.</strong> Fetch the Services item in the EN locale (<code>list_collection_items</code>, filter by <code>slug</code>) so the exact current field values are in hand.</li>
+<li><strong>Assess against the rules.</strong> Compare every editorial field (<code>text</code>, <code>meta-description</code>, <code>pricing</code>, <code>faqs</code>, <code>post-treatment-care</code>, <code>special-booking-note</code>, <code>disclaimer</code>) against house style, brand voice, and medical compliance. Classify each finding as either a <strong>spot change</strong> or a <strong>presentation / structural note</strong>.</li>
+<li><strong>Write <code>&lt;slug&gt;.hd</code>.</strong> Produce the remediation document (structure below).</li>
+<li><strong>PM reviews per change.</strong> The PM sets each change's <strong>Decision</strong> to <em>approved</em> or <em>rejected</em> (or replies with the change IDs).</li>
+<li><strong>Apply approved changes.</strong> Write only the approved changes back to the CMS item (EN) as a <strong>draft</strong> update via <code>update_collection_items</code>, following <em>Applying approved fixes — integrity &amp; exact-match replacement</em> below (staleness check + byte-exact anchored replace). Note any change that requires the Designer (it cannot be done via API).</li>
+<li><strong>PM publishes.</strong> The PM reviews the draft in Webflow and publishes. Localization implications are flagged for a separate run.</li>
+<li><strong>Record completion.</strong> Enter the date in the item's <strong>Remediated</strong> column in <code>REMEDIATE.hd</code>.</li>
+</ol>
+</section>
+
+<section>
+<h2>Structure of a <code>&lt;slug&gt;.hd</code> document</h2>
+<ol>
+<li><strong>Frontmatter</strong> — <code>title</code>, <code>slug</code>, the CMS item id, date, and a <code>status</code> (e.g. <em>awaiting review</em>).</li>
+<li><strong>Compliance snapshot</strong> — a short table of which rule areas apply and which already pass (a GP service, for instance, has no cosmetic "results vary" or device-disclaimer requirement).</li>
+<li><strong>Proposed spot changes</strong> — one block per change, each independently approvable.</li>
+<li><strong>Presentation &amp; structural notes</strong> — larger issues (structure, formatting, missing CTA, accessibility) raised as recommendations, <em>not</em> auto-applied.</li>
+<li><strong>Next steps</strong> — what happens on approval.</li>
+</ol>
+</section>
+
+<section>
+<h2>Change-block conventions</h2>
+<p>Each proposed change is a self-contained block carrying:</p>
+<ul>
+<li>A stable <strong>ID</strong> (<code>C1</code>, <code>C2</code>, …) and a <code>data-change-id</code> attribute, plus a <strong>priority</strong> (required / recommended / optional) and a <strong>type</strong> (grammar, spelling, hyphenation, terminology, formatting, …).</li>
+<li>The governing <strong>field</strong> and the <strong>rule</strong> it enforces.</li>
+<li>A <strong>Before</strong> line and an <strong>After</strong> line, each showing the change <em>in the surrounding sentence</em> so context is clear.</li>
+<li>A <strong>Decision</strong> field the PM edits: <code>pending</code> &rarr; <code>approved</code> / <code>rejected</code>.</li>
+</ul>
+<h3>Highlighting</h3>
+<p>The exact span being changed is wrapped in the HTML <code>&lt;mark&gt;</code> element — in <strong>Before</strong> it marks the text being replaced; in <strong>After</strong> it marks the replacement. <code>&lt;mark&gt;</code> is a fully supported inline element in the <code>.hd</code> format, so there is <strong>no format conflict</strong>. Where a change removes text, it may also be shown struck with <code>&lt;s&gt;</code>. Because <code>.hd</code> has no interactive form controls, the <strong>Decision</strong> field is edited as text (or the PM replies with the change IDs) — there are intentionally no checkboxes.</p>
+<h3>Example</h3>
+<blockquote>
+<p><strong>C1 · Subject–verb agreement</strong> — <em>required · grammar · field: <code>text</code></em> — <strong>Decision:</strong> <mark>pending</mark></p>
+<p><strong>Before:</strong> Your local <mark>doctors is</mark> also highly skilled&hellip;</p>
+<p><strong>After:</strong> Your local <mark>doctor is</mark> also highly skilled&hellip;</p>
+</blockquote>
+</section>
+
+<section>
+<h2>Applying approved fixes — integrity &amp; exact-match replacement</h2>
+<p>This governs step 7 (apply). It exists because Webflow CMS items expose <strong>no version number or ETag</strong> via the Data API — only <code>lastUpdated</code> / <code>lastPublished</code> timestamps and the content itself. So we detect drift with a captured fingerprint, and apply changes the way a source-control patch does: byte-exact, anchored, and re-verified against the <em>current</em> content.</p>
+
+<h3>Golden rule</h3>
+<p><strong>Never write back the field value captured at review time.</strong> Always re-fetch the item immediately before writing and apply each approved change as a byte-exact replacement <em>against the current value</em>. Unrelated edits elsewhere in the field are then preserved; only a change whose own target text moved is affected.</p>
+
+<h3>1 · Capture a fingerprint at review time</h3>
+<p>When the remediation doc is produced, record in it:</p>
+<ul>
+<li><code>captured_at</code> — timestamp of the review fetch.</li>
+<li><code>item_last_updated</code> and <code>item_last_published</code> — from the fetched item.</li>
+<li><code>&lt;field&gt;_sha256</code> — a hash of each editorial field that will be touched (e.g. <code>text_sha256</code>).</li>
+<li>Per change: the exact raw <strong>anchor</strong> (the literal field bytes to be replaced — including tags/entities, <em>not</em> the HTML-escaped display text shown in the Before line), the <strong>replacement</strong>, and the <strong>expected occurrence count</strong>.</li>
+</ul>
+
+<h3>2 · Staleness tripwire (whole item)</h3>
+<p>At apply time, re-fetch the item <strong>by id</strong>, in the <strong>same <code>cmsLocaleId</code></strong>, then:</p>
+<ul>
+<li><code>lastUpdated</code> and every field hash unchanged &rarr; nothing drifted; proceed to apply all approved changes.</li>
+<li>Anything changed &rarr; do <strong>not</strong> abort wholesale; drop to per-change verification (below). The item was edited between review and apply, and only some changes may be affected.</li>
+</ul>
+
+<h3>3 · Anchored exact-match replacement (per change)</h3>
+<p>Model each change as a source-control-style replace: <code>{ anchor, replacement, expected_count }</code>.</p>
+<ol>
+<li>Count <strong>byte-exact</strong> occurrences of <code>anchor</code> in the <strong>current</strong> field value.</li>
+<li><code>count === expected_count</code> &rarr; apply the replacement to the matched occurrence(s) and write.</li>
+<li><code>count !== expected_count</code> (including 0) &rarr; the target has moved or is now ambiguous. <strong>Skip this change, mark it stale, and return it to review.</strong> Never guess a location.</li>
+</ol>
+
+<h3>Multiple occurrences of the same text</h3>
+<p>A target span can legitimately appear more than once in a field, so byte-exact matching alone cannot say <em>which</em> to change. Disambiguate like a patch hunk:</p>
+<ul>
+<li><strong>Extend the anchor with surrounding context</strong> until it is unique — preferred; this mirrors a git hunk's context lines.</li>
+<li><strong>Apply to all</strong> occurrences deliberately, asserting <code>expected_count = N</code> (e.g. the same misspelling occurs 3 times &rarr; expect 3, replace 3).</li>
+<li><strong>Target the k-th occurrence</strong> by index, still guarded by the expected total count.</li>
+</ul>
+<p>Whichever is used, the change is applied only if the observed count equals what was expected at review time. A mismatch means the document changed shape, and the change goes back for re-review rather than being force-applied.</p>
+
+<h3>4 · Confirm the write</h3>
+<p>Write as a <strong>draft</strong> (<code>update_collection_items</code>, EN locale). After writing, re-read <code>lastUpdated</code> to confirm the update landed on the version just verified, and report exactly which changes applied, which were skipped as stale, and any that require the Designer.</p>
+
+<h3>Residual race</h3>
+<p>Webflow offers no <code>If-Match</code> precondition on writes, so verify-then-write is client-side and has a sub-second window in which another editor could save. Keep the fetch &rarr; verify &rarr; write sequence tight, and treat the post-write <code>lastUpdated</code> re-read as the final confirmation.</p>
+</section>
+
+<section>
+<h2>Scope guardrails</h2>
+<ul>
+<li>Do not restructure a page onto the template-A scaffold as part of spot remediation — recommend it in the notes and let the PM decide on a dedicated rewrite.</li>
+<li>Do not invent missing facts (pricing, session counts, manufacturer statements). Flag the gap for the reviewer.</li>
+<li>Do not touch booking/config fields (Timely, JotForm, SimplyBookMe, hero, photos) unless a change is explicitly about them.</li>
+<li>Image <code>alt</code> text and other asset-level fixes are noted but handled deliberately, not bundled into text spot changes.</li>
+</ul>
+</section>
